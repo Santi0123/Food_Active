@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!--Color fondo de aplicacion -->
+    <color name="fondo_de_la_aplicacion">#082E4D</color>
+
+    <!--Botones sin pulsar-->
+    <color name="boton_sin_pulsar">#FFB74D</color>
+    <!--Botones pulsado-->
+        <color name="boton_pulsado">#F57C00</color>
+
+    <!--Color de texto -->
+    <color name="color_texto_gris">#ADA9A0</color>
+
+    <!--Colores para el cardview -->
+    <color name="colorNormal">#38478C</color>
+    <color name="colorOnPressed">#5A6BC8</color>
+
+
+</resources>
