@@ -1,6 +1,7 @@
 package com.example.gymactive
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -26,6 +27,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initUI() {
         setOnClick()
+        mainBinding.buttonRecyclerView.setOnClickListener{irComida()}
     }
 
     private fun setOnClick() {
@@ -41,5 +43,10 @@ class MainActivity : AppCompatActivity() {
         Snackbar.make(view, "A por todas!!!", Snackbar.LENGTH_LONG)
             .setAction("Action", null)
             .show()
+    }
+
+    private fun irComida(){
+        val intent = Intent(this, ComidaView::class.java)
+        startActivity(intent)
     }
 }

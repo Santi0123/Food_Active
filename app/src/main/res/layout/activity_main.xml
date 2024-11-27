@@ -60,9 +60,10 @@
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cardView2"
         android:layout_width="237dp"
-        android:layout_height="87dp"
-        app:cardBackgroundColor="@color/colorNormal"
+        android:layout_height="70dp"
+        app:cardBackgroundColor="@color/colorOnPressed"
         app:cardCornerRadius="16dp"
         app:cardElevation="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -70,20 +71,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.175"
-        tools:ignore="MissingConstraints" >
+        tools:ignore="MissingConstraints">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="70dp"
             android:orientation="vertical">
+
             <TextView
                 android:id="@+id/bienvenido"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="72dp"
                 android:text="Bienvenid@"
                 android:textColor="#000000"
-                android:textSize="45dp"
-                />
+                android:textSize="45dp" />
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
@@ -123,5 +124,27 @@
             android:textSize="16sp"
             android:visibility="visible" />
     </FrameLayout>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="71dp"
+        android:layout_height="71dp"
+        android:layout_margin="8dp"
+        android:padding="16dp"
+        app:cardBackgroundColor="@color/fondo_de_la_aplicacion"
+        app:cardCornerRadius="40000dp"
+        app:cardElevation="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.908"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.944">
+
+        <Button
+            android:id="@+id/button_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/flecha" />
+    </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
