@@ -3,9 +3,6 @@ package com.example.gymactive
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.example.gymactive.databinding.ActivityMainBinding
@@ -46,7 +43,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun irComida(){
-        val intent = Intent(this, ComidaView::class.java)
+        val intent = Intent(this, ComidaAct::class.java)
         startActivity(intent)
     }
 }

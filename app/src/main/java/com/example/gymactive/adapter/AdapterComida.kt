@@ -3,32 +3,35 @@ package com.example.gymactive.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.gymactive.databinding.ItemComidaBinding
 import com.example.gymactive.models.Comida
 
 class AdapterComida(
-    var listComida: MutableList<Comida>,
-    private val onDeleteClick: (Comida) -> Unit
+    var listaComida: MutableList<Comida>,
+    var editarComida: (Int) -> Unit,
+    var borrarComida: (Int) -> Unit
 ) : RecyclerView.Adapter<ViewHolderComida>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderComida {
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding = ItemComidaBinding.inflate(layoutInflater, parent, false)
-        // Se la ponemos para que borre cuando se pulse 
-        return ViewHolderComida(binding, onDeleteClick)
+        return ViewHolderComida(binding, editarComida, borrarComida)
     }
 
-    override fun getItemCount(): Int = listComida.size
+    override fun getItemCount(): Int = listaComida.size
 
     override fun onBindViewHolder(holder: ViewHolderComida, position: Int) {
-        holder.render(listComida[position])
+        val comida = listaComida[position]
+        holder.render(comida)
     }
-    // Le implementamos la funcion en el adapter
-    fun deleteItem(comida: Comida) {
-        val position = listComida.indexOf(comida)
-        if (position != -1) {
-            listComida.removeAt(position)
+
+    fun deleteItem(position: Int) {
+        if (position in listaComida.indices) {
+            listaComida.removeAt(position)
             notifyItemRemoved(position)
+            notifyItemRangeChanged(position, listaComida.size)
         }
     }
 }
+
