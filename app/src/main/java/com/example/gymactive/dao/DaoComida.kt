@@ -13,6 +13,4 @@ class DaoComida private constructor(): InterfacesComidaDao {
     }
 
     override fun getDataComida(): List<Comida>  = RepositoryComida.listaComidas
-    // Implemtamos la funcion de borrar
-    override fun deleteComida(comida: Comida) { RepositoryComida.listaComidas.remove(comida) }
 }

@@ -1,25 +1,83 @@
 package com.example.gymactive.controller
 
 import android.content.Context
-import android.widget.Toast
-import com.example.gymactive.ComidaView
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.gymactive.ComidaAct
 import com.example.gymactive.adapter.AdapterComida
 import com.example.gymactive.dao.DaoComida
+import com.example.gymactive.dialog.DialogAgregarComida
+import com.example.gymactive.dialog.DialogEditarComida
 import com.example.gymactive.models.Comida
 
-class Controller(private val activity: ComidaView) {
 
-    private lateinit var adapter: AdapterComida
+class Controller(private val context: Context) {
+    //private lateinit var adapter: AdapterComida
+
+    private  lateinit var listaComidas : MutableList<Comida>
+    private  lateinit var  layoutManager: LinearLayoutManager
+
+    init{
+        initData()
+        initBotonAgregar()
+    }
 
     fun setAdapter() {
-        val listaComidas = DaoComida.myDao.getDataComida().toMutableList()
-        //actualizamos el adapter para que se borre
-        adapter = AdapterComida(listaComidas) { comida ->
-            DaoComida.myDao.deleteComida(comida)
-            adapter.deleteItem(comida)
+        val comidaActivity = context as ComidaAct
+        comidaActivity.activityComidaBinding.rvComida.adapter =
+            AdapterComida(listaComidas, ::editarComida, ::borrarComida)
+    }
+
+    fun initData(){
+        listaComidas = DaoComida.myDao.getDataComida().toMutableList()
+    }
+
+    private fun initBotonAgregar() {
+        val comidaActivity = context as ComidaAct
+        comidaActivity.activityComidaBinding.btnAgregar.setOnClickListener{
+            agregarComida()
+        }
+    }
+
+    fun agregarComida(){
+        val dialog = DialogAgregarComida(){ comida -> okNuevaComida(comida) }
+
+        val  comidaActivity = context as ComidaAct
+        dialog.show(comidaActivity.supportFragmentManager,"Agragamos comida")
+
+        layoutManager = LinearLayoutManager(context)
+        comidaActivity.activityComidaBinding.rvComida.layoutManager = layoutManager
+    }
+
+    private fun okNuevaComida(comida: Comida) {
+        listaComidas.add(comida)
+        val comidaActivity = context as ComidaAct
+        comidaActivity.activityComidaBinding.rvComida.adapter?.notifyItemInserted(listaComidas.size - 1)
+        layoutManager.scrollToPositionWithOffset(listaComidas.lastIndex, listaComidas.size -1)
+    }
+
+    fun editarComida(positionLista: Int) {
+        val comidaActivity = context as ComidaAct
+
+        val comidaEditarDialog = DialogEditarComida(positionLista, listaComidas[positionLista]) { comidaActualizada, position ->
+            actualizarComida(comidaActualizada, position)
         }
 
-        activity.comidaViewBinding.rvComida.adapter = adapter
+        comidaEditarDialog.show(comidaActivity.supportFragmentManager, "Editamos la comida")
     }
+
+    fun actualizarComida(comidaActualizada: Comida, position: Int) {
+        listaComidas[position] = comidaActualizada
+        val comidaActivity = context as ComidaAct
+        comidaActivity.activityComidaBinding.rvComida.adapter?.notifyItemChanged(position)
+    }
+
+
+    fun borrarComida(position: Int) {
+        listaComidas.removeAt(position)
+        val comidaActivity = context as ComidaAct
+        comidaActivity.activityComidaBinding.rvComida.adapter?.notifyItemRemoved(position)
+        comidaActivity.activityComidaBinding.rvComida.adapter?.notifyItemRangeChanged(position, listaComidas.size)
+    }
+
 }
 
