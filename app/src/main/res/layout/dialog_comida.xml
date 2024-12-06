@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/nombre_plato"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nombre del plato"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/descricion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="descricion"
+        android:inputType="text"/>
+    <EditText
+        android:id="@+id/imagen"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="URL de la imagen"
+        android:inputType="textUri"/>
+</LinearLayout>
