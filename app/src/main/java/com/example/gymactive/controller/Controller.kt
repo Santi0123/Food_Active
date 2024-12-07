@@ -9,6 +9,7 @@ import com.example.gymactive.ComidaAct
 import com.example.gymactive.adapter.AdapterComida
 import com.example.gymactive.dao.DaoComida
 import com.example.gymactive.dialog.DialogAgregarComida
+import com.example.gymactive.dialog.DialogBorrarComida
 import com.example.gymactive.dialog.DialogEditarComida
 import com.example.gymactive.models.Comida
 
@@ -30,7 +31,7 @@ class Controller(private val context: Context) {
     fun setAdapter() {
         val comidaActivity = context as ComidaAct
         comidaActivity.binding.rvComida.adapter =
-            AdapterComida(listaComidas, ::editarComida, ::borrarComida)
+            AdapterComida(listaComidas, ::editarComida, ::mostrarDialogoBorrarComida)
         layoutManager = LinearLayoutManager(context)
         comidaActivity.binding.rvComida.layoutManager = layoutManager
     }
@@ -76,7 +77,17 @@ class Controller(private val context: Context) {
         comidaActivity.binding.rvComida.adapter?.notifyItemChanged(position)
     }
 
-    fun borrarComida(position: Int) {
+    private fun mostrarDialogoBorrarComida(position: Int) {
+        val comidaActivity = context as ComidaAct
+
+        val comidaBorrarDialog = DialogBorrarComida(position, listaComidas[position]) {
+            confirmarBorrado(it)
+        }
+
+        comidaBorrarDialog.show(comidaActivity.supportFragmentManager, "Borrar la comida")
+    }
+
+    fun confirmarBorrado(position: Int) {
         listaComidas.removeAt(position)
         val comidaActivity = context as ComidaAct
         comidaActivity.binding.rvComida.adapter?.notifyItemRemoved(position)
@@ -92,7 +103,7 @@ class Controller(private val context: Context) {
     fun handleGalleryResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null && data.data != null) {
             imageUri = data.data
-            // Aquí puedes manejar la imageUri según sea necesario
+            
         }
     }
 }

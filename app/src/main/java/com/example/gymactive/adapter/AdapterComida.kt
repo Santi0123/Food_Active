@@ -26,12 +26,12 @@ class AdapterComida(
         holder.render(comida)
     }
 
-    fun deleteItem(position: Int) {
+    /*fun deleteItem(position: Int) {
         if (position in listaComida.indices) {
             listaComida.removeAt(position)
             notifyItemRemoved(position)
             notifyItemRangeChanged(position, listaComida.size)
         }
-    }
+    }*/
 }
 
