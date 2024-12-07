@@ -18,12 +18,23 @@
         android:id="@+id/descricion"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="descricion"
+        android:hint="Descripción"
         android:inputType="text"/>
-    <EditText
-        android:id="@+id/imagen"
+
+    <ImageButton
+        android:id="@+id/galeria"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="URL de la imagen"
-        android:inputType="textUri"/>
+        android:background="?attr/selectableItemBackground"
+        android:contentDescription="Agregar Incidencia"
+        android:src="@drawable/galeria"
+        android:layout_gravity=""/>
+
+    <ImageView
+        android:id="@+id/imagen_preview"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="16dp"
+        android:scaleType="centerCrop"
+        android:contentDescription="Vista previa de la imagen" />
 </LinearLayout>

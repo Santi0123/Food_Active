@@ -1,5 +1,6 @@
 package com.example.gymactive
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -9,28 +10,22 @@ import com.example.gymactive.models.Comida
 
 class ComidaAct : AppCompatActivity() {
 
-    private lateinit var controller: Controller
-    lateinit var activityComidaBinding: ActivityComidaBinding
+    lateinit var binding: ActivityComidaBinding
+    internal lateinit var controller: Controller
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //enableEdgeToEdge()
-        activityComidaBinding = ActivityComidaBinding.inflate(layoutInflater)
-        setContentView(activityComidaBinding.root)
-        init()
-    }
+        binding = ActivityComidaBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-    private fun init() {
-        initRecyclerView()
         controller = Controller(this)
         controller.setAdapter()
-
     }
 
-    private fun initRecyclerView() {
-        activityComidaBinding.rvComida.layoutManager = LinearLayoutManager(this)
-    }
-
-    fun mostrarDialogoEditar(comidaEditar: Comida, position: Int) {
-
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        controller.handleGalleryResult(requestCode, resultCode, data)
     }
 }
+
+

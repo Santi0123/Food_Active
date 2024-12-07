@@ -22,7 +22,7 @@
         android:layout_marginEnd="21dp"
         android:layout_marginBottom="14dp"
         android:background="?attr/selectableItemBackground"
-        android:contentDescription="Agregar Incidencia"
+        android:contentDescription="Agregar Comida"
         android:src="@drawable/fluent_color__add_circle_32" />
 
 
