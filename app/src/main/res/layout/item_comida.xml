@@ -7,7 +7,7 @@
     android:layout_margin="16dp"
     app:cardCornerRadius="16dp"
     app:cardElevation="16dp"
-    app:cardBackgroundColor="@color/colorOnPressed">
+    app:cardBackgroundColor="@color/color_caja">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,19 +15,16 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <LinearLayout
+        <!-- Imagen del plato -->
+        <ImageView
+            android:id="@+id/ivComidaImage"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="146dp"
+            android:layout_gravity="center"
+            android:scaleType="centerCrop"
+            android:background="@color/black" />
 
-            <ImageView
-                android:id="@+id/ivComidaImage"
-                android:layout_width="match_parent"
-                android:layout_height="146dp"
-                android:layout_gravity="center"
-                android:background="@color/black" />
-        </LinearLayout>
-
+        <!-- Nombre del plato -->
         <TextView
             android:id="@+id/tvComidaName"
             android:layout_width="wrap_content"
@@ -36,38 +33,58 @@
             android:text="Nombre del plato"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center" />
 
+        <!-- Descripción del plato -->
         <TextView
-            android:id="@+id/tvComidaDescricion"
+            android:id="@+id/tvComidaDescripcion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="Anotacion del plato..."
+            android:text="Anotación del plato..."
             android:textSize="14sp"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center" />
 
+        <!-- Botones de acción -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:orientation="horizontal"
-            android:gravity="end">
+            android:gravity="end"
+            android:padding="8dp">
 
-            <ImageButton
+            <!-- Botón Editar -->
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnEdit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="?attr/selectableItemBackground"
-                android:src="@drawable/fluent_color__edit_32" />
+                android:icon="@drawable/fluent_color__edit_32"
+                android:text="Editar"
+                android:textColor="?attr/colorPrimary"
+                android:layout_marginEnd="8dp"
+                app:iconPadding="8dp"
+                app:iconGravity="start"
+                app:cornerRadius="16dp"
+                app:strokeColor="?attr/colorPrimary"
+                app:strokeWidth="1dp"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
 
-            <ImageButton
+            <!-- Botón Eliminar -->
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnDelete"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:background="?attr/selectableItemBackground"
-                android:src="@drawable/delete"/>
+                android:icon="@drawable/delete"
+                android:text="Eliminar"
+                android:textColor="?attr/colorError"
+                app:iconPadding="8dp"
+                app:iconGravity="start"
+                app:cornerRadius="16dp"
+                app:strokeColor="?attr/colorError"
+                app:strokeWidth="1dp"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
         </LinearLayout>
+
     </LinearLayout>
 </androidx.cardview.widget.CardView>

@@ -17,6 +17,7 @@
     <!--Colores para el cardview -->
     <color name="colorNormal">#38478C</color>
     <color name="colorOnPressed">#5A6BC8</color>
+    <color name="color_caja">#2C6B58</color>
 
 
 </resources>

@@ -17,7 +17,7 @@ class ViewHolderComida(
     fun render(comida: Comida) {
         // Asignar nombre y descripción
         binding.tvComidaName.text = comida.nombre_plato
-        binding.tvComidaDescricion.text = comida.descricion
+        binding.tvComidaDescripcion.text = comida.descricion
         // Cargar imagen con Glide
         Glide.with(itemView.context)
             .load(comida.image) // URL de la imagen

@@ -1,11 +1,10 @@
 package com.example.gymactive
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.CheckBox
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.gymactive.databinding.FragmentRegistrarseBinding
@@ -62,10 +61,13 @@ class Registrarse : Fragment() {
                 user?.sendEmailVerification()?.addOnCompleteListener { emailTask ->
                     if (emailTask.isSuccessful) {
                         Toast.makeText(context, "Registro exitoso. Verifique su correo electrónico.", Toast.LENGTH_LONG).show()
+                        authentication.signOut()
+                        val intent = Intent(activity, Login::class.java)
+                        startActivity(intent)
+                        activity?.finish()
                     } else {
                         Toast.makeText(context, "Registro exitoso, pero fallo al enviar verificación: ${emailTask.exception?.message}", Toast.LENGTH_LONG).show()
                     }
-                    authentication.signOut()
                 }
             } else {
                 handleRegistrationError(task.exception)

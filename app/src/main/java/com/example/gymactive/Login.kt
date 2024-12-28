@@ -56,6 +56,12 @@ class Login : AppCompatActivity() {
             if (task.isSuccessful) {
                 val user = auth.currentUser
                 if (user?.isEmailVerified == true) {
+                    // Almacena el estado de la sesión en SharedPreferences
+                    val sharedPreferences = getSharedPreferences("session_prefs", MODE_PRIVATE)
+                    val editor = sharedPreferences.edit()
+                    editor.putBoolean("is_logged_in", true)
+                    editor.apply()
+
                     val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
                     finish()
