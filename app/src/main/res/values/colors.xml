@@ -2,22 +2,23 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="white2">#DEDDDD</color>
+    <!-- Colores aplicacion -->
+    <color name="fondo_de_la_aplicacion">#D7C3A5</color> <!-- Marrón pastel claro -->
 
-    <!--Color fondo de aplicacion -->
-    <color name="fondo_de_la_aplicacion">#082E4D</color>
+    <color name="boton_sin_pulsar">#F4B178</color> <!-- Naranja claro con tono marrón pastel -->
 
-    <!--Botones sin pulsar-->
-    <color name="boton_sin_pulsar">#FFB74D</color>
-    <!--Botones pulsado-->
-        <color name="boton_pulsado">#F57C00</color>
+    <color name="boton_pulsado">#E68A2D</color> <!-- Marrón más oscuro para botones pulsados -->
 
-    <!--Color de texto -->
-    <color name="color_texto_gris">#ADA9A0</color>
+    <color name="color_texto_gris">#B9B59A</color> <!-- Gris cálido claro -->
 
-    <!--Colores para el cardview -->
-    <color name="colorNormal">#38478C</color>
-    <color name="colorOnPressed">#5A6BC8</color>
-    <color name="color_caja">#2C6B58</color>
+    <color name="colorNormal">#8D7B5A</color> <!-- Marrón suave para cardview -->
+    <color name="colorOnPressed">#A88F6F</color> <!-- Marrón más suave para el estado presionado -->
+    <color name="color_caja">#C0A97D</color> <!-- Marrón claro con tonalidad amarilla para la caja -->
+
+    <color name="boton_borrar">#E57373</color> <!-- Rojo terracota suave -->
+    <color name="boton_agragar">#A8D08D</color> <!-- Verde suave -->
+    <color name="boton_editar">#A388B6</color>
 
 
 </resources>

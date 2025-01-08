@@ -1,7 +1,20 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.GymActive" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+    <!-- Base application theme -->
+    <style name="Base.Theme.GymActive" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Barra de estado transparente -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">false</item>
+
+        <!-- Color de fondo de la ventana -->
+        <item name="android:windowBackground">@color/fondo_de_la_aplicacion</item>
+
+        <!-- Personalización adicional -->
+        <item name="colorPrimary">@color/boton_sin_pulsar</item>
+        <item name="colorPrimaryVariant">@color/boton_pulsado</item>
+        <item name="colorSecondary">@color/color_caja</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorOnSecondary">@color/color_texto_gris</item>
     </style>
+
+    <style name="Theme.GymActive" parent="Base.Theme.GymActive" />
 </resources>
