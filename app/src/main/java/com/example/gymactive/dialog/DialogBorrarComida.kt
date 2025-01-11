@@ -16,10 +16,11 @@ class DialogBorrarComida(
     private val onBorrarComida: (Int) -> Unit
 ) : DialogFragment() {
 
-    private lateinit var binding: BorrarComidaDialogBinding
+    private var _binding: BorrarComidaDialogBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        binding = BorrarComidaDialogBinding.inflate(LayoutInflater.from(requireContext()))
+        _binding = BorrarComidaDialogBinding.inflate(LayoutInflater.from(requireContext()))
 
         setValuesDialog(binding)
 
@@ -47,12 +48,15 @@ class DialogBorrarComida(
         binding.descricion.setText(comida.descricion)
 
         val imageUri = Uri.parse(comida.image)
-        if (imageUri != null && imageUri.toString().isNotEmpty()) {
+        if (!imageUri.toString().isNullOrEmpty()) {
             binding.imagenPreview.setImageURI(imageUri)
         } else {
-            // Opcional: Establece una imagen predeterminada si la URI es nula o vacía
             binding.imagenPreview.setImageResource(R.drawable.galeria)
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }

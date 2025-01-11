@@ -1,175 +1,143 @@
 package com.example.gymactive
 
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
-import android.widget.ImageButton
-import android.widget.TextView
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.ImageView
-import androidx.appcompat.app.ActionBarDrawerToggle
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.navigateUp
+import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
+import com.bumptech.glide.Glide
 import com.example.gymactive.databinding.ActivityMainBinding
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
-import com.bumptech.glide.Glide
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var mainBinding: ActivityMainBinding
     private lateinit var auth: FirebaseAuth
     private lateinit var drawerLayout: DrawerLayout
-    private lateinit var buttonDrawerToggle: ImageButton
-    private lateinit var navView: NavigationView
-
+    private lateinit var navController: NavController
+    private lateinit var appBarConfiguration: AppBarConfiguration
+    private lateinit var mainBinding: ActivityMainBinding
     private lateinit var userNameTextView: TextView
-    private lateinit var userEmailTextView: TextView
     private lateinit var userImageView: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Inicialización del Binding para acceder a las vistas definidas en el layout XML
         mainBinding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(mainBinding.root)
+        setContentView(mainBinding.root) // Establece el layout de la actividad
 
-        // Inicialización principal de la UI
-        initUI()
+        // Configuración del título de la barra superior
+        supportActionBar?.title = "Gym Active"
 
-        // Cargar los datos guardados de SharedPreferences en el menú
-        loadUserData()
-    }
-
-    // Inicializar la interfaz de usuario
-    private fun initUI() {
-        setupFirebase()
-        setupDrawer()
-        checkUserSession()
-        setupListeners()
-    }
-
-    // Configuración de Firebase
-    private fun setupFirebase() {
+        // Inicialización de FirebaseAuth para manejar usuarios
         auth = FirebaseAuth.getInstance()
-    }
 
-    // Configuración del DrawerLayout
-    private fun setupDrawer() {
-        drawerLayout = findViewById(R.id.drawer_layout)
-        buttonDrawerToggle = findViewById(R.id.buttonDrawerToggle)
-        navView = findViewById(R.id.nav_view)
+        // Configuración del Toolbar
+        val toolbar = mainBinding.appBarLayoutDrawer.toolbar
+        setSupportActionBar(toolbar)
 
-        val actionBarDrawerToggle = ActionBarDrawerToggle(
-            this,
-            drawerLayout,
-            R.string.drawer_open,
-            R.string.drawer_close
+        // Configuración del DrawerLayout y el Navigation Component
+        drawerLayout = mainBinding.drawerLayout
+        val navHost = supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
+        navController = navHost.navController // Controlador de navegación
+
+        // Configuración de los destinos principales y el DrawerLayout
+        appBarConfiguration = AppBarConfiguration(
+            setOf(R.id.home2), // Destinos principales
+            drawerLayout // DrawerLayout asociado
         )
-        drawerLayout.addDrawerListener(actionBarDrawerToggle)
-        actionBarDrawerToggle.syncState()
 
-        buttonDrawerToggle.setOnClickListener {
-            drawerLayout.openDrawer(GravityCompat.START)
-        }
+        // Vinculación del AppBar con el controlador de navegación
+        setupActionBarWithNavController(navController, appBarConfiguration)
+        // Configuración del NavigationView con el controlador de navegación
+        mainBinding.navView.setupWithNavController(navController)
 
-        // Listener para los items del menú
-        navView.setNavigationItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.comida_menu -> {
-                    val intent = Intent(this, ComidaAct::class.java)
-                    startActivity(intent)
-                    drawerLayout.closeDrawer(GravityCompat.START)
-                    true
-                }
-                R.id.setting_menu -> {
-                    val intent = Intent(this, Setting::class.java)
-                    startActivity(intent)
-                    drawerLayout.closeDrawer(GravityCompat.START)
-                    true
-                }
-                R.id.logout_menu -> {
-                    logout()
-                    drawerLayout.closeDrawer(GravityCompat.START)
-                    true
-                }
+        // Carga de datos del usuario para mostrar en el header del Navigation Drawer
+        loadUserData(mainBinding.navView)
+    }
 
-                else -> false
+    // Método para manejar la navegación al presionar "atrás" en la barra superior
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    }
+
+    // Método para inflar el menú en la barra de herramientas
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu, menu) // Infla el menú desde el archivo XML
+        return true
+    }
+
+    // Método para manejar las acciones al seleccionar un elemento del menú
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.settingMenu -> { // Navegar a la configuración
+                navController.navigate(R.id.settingMenu)
+                true
             }
+            R.id.comidaMenu -> { // Navegar al menú de comida
+                navController.navigate(R.id.comidaMenu)
+                true
+            }
+            R.id.logoutMenu -> { // Cerrar sesión
+                logout() // Llama a la función para cerrar sesión
+                drawerLayout.closeDrawer(GravityCompat.START) // Cierra el Drawer si está abierto
+                true
+            }
+            else -> super.onOptionsItemSelected(item) // Acciones por defecto
         }
     }
 
-    // Verificar sesión del usuario
-    private fun checkUserSession() {
-        val sharedPreferences = getSharedPreferences("session_prefs", MODE_PRIVATE)
-        val isLoggedIn = sharedPreferences.getBoolean("is_logged_in", false)
-
-        val currentUser = auth.currentUser
-        if (currentUser != null && currentUser.isEmailVerified && isLoggedIn) {
-            enableUserFeatures()
-        } else {
-            redirectToLogin()
-        }
-    }
-
-    // Configuración de listeners
-    private fun setupListeners() {
-        mainBinding.buttonRecyclerView.setOnClickListener { irComida() }
-        mainBinding.buttonLogin.setOnClickListener { logout() }
-    }
-
-    // Función para redirigir al login
-    private fun redirectToLogin() {
-        val intent = Intent(this, Login::class.java)
-        startActivity(intent)
-        finish()
-    }
-
-    // Habilitar funciones para usuarios autenticados
-    private fun enableUserFeatures() {
-        // Implementar aquí las funciones habilitadas para el usuario autenticado
-    }
-
-    // Función para cerrar sesión
+    // Función para cerrar sesión del usuario
     private fun logout() {
-        auth.signOut()
+        auth.signOut() // Cierra la sesión en Firebase
         val sharedPreferences = getSharedPreferences("session_prefs", MODE_PRIVATE)
         val editor = sharedPreferences.edit()
-        editor.putBoolean("is_logged_in", false)
-        editor.apply()
+        editor.putBoolean("is_logged_in", false) // Marca al usuario como no logueado
+        editor.apply() // Guarda los cambios en SharedPreferences
 
-        redirectToLogin()
+        redirectToLogin() // Redirige al login
     }
 
-    // Redirigir a la actividad de comida
-    private fun irComida() {
-        val intent = Intent(this, ComidaAct::class.java)
-        startActivity(intent)
+    // Función para redirigir al login tras cerrar sesión
+    private fun redirectToLogin() {
+        val intent = Intent(this, Login::class.java) // Crea una intención para ir a la actividad Login
+        startActivity(intent) // Inicia la actividad
+        finish() // Finaliza la actividad actual
     }
 
-    // Cargar datos guardados desde SharedPreferences en el menú
-    private fun loadUserData() {
-        // Obtener los valores desde SharedPreferences
-        val sharedPreferences = getSharedPreferences("UserSettings", MODE_PRIVATE)
-        val userName = sharedPreferences.getString("userName", "Usuario no encontrado")
-        val userEmail = sharedPreferences.getString("userEmail", "email@ejemplo.com")
-        val imageUri = sharedPreferences.getString("imageUri", "")
+    // Función para cargar los datos guardados del usuario desde SharedPreferences
+    private fun loadUserData(navView: NavigationView) {
+        val sharedPreferences = getSharedPreferences("UserSettings", MODE_PRIVATE) // Accede a SharedPreferences
+        val userName = sharedPreferences.getString("userName", "Usuario no encontrado") // Obtiene el nombre del usuario
+        val imageUri = sharedPreferences.getString("imageUri", "") // Obtiene la URI de la imagen
 
-        // Acceder al header del NavigationView
+        // Accede al header del NavigationView
         val headerView = navView.getHeaderView(0)
 
-        // Inicializar las vistas del header
-        userNameTextView = headerView.findViewById(R.id.userNameTextView)
-        userImageView = headerView.findViewById(R.id.userImageView)
+        // Inicializa las vistas del header
+        userNameTextView = headerView.findViewById(R.id.userNameTextView) // TextView del nombre
+        userImageView = headerView.findViewById(R.id.userImageView) // ImageView de la imagen
 
-        // Establecer el nombre y el correo
+        // Establece el nombre del usuario en el TextView
         userNameTextView.text = userName
 
-        // Cargar la imagen desde la URI, si existe
+        // Carga la imagen del usuario usando Glide si la URI no está vacía
         if (!imageUri.isNullOrEmpty()) {
-            // Usando Glide para cargar la imagen
             Glide.with(this)
                 .load(imageUri)
-                .circleCrop()  // Esto es opcional si deseas que la imagen sea circular
-                .into(userImageView)
+                .circleCrop() // Hace que la imagen sea circular
+                .into(userImageView) // Carga la imagen en el ImageView
         }
     }
 }
