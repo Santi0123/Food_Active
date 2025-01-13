@@ -3,28 +3,32 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
+    <!-- Grupo principal con comportamiento de selección única -->
     <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/home2"
-            android:title="Menu"
-            android:icon="@drawable/house"/>
         <item
             android:id="@+id/comidaMenu"
             android:title="Comida"
-            android:icon="@drawable/comida"/>
+            android:icon="@drawable/comida" />
 
         <item
             android:id="@+id/settingMenu"
-            android:title="Setting"
-            android:icon="@drawable/setting"/>
+            android:title="Configuración"
+            android:icon="@drawable/setting" />
+
+        <item
+            android:id="@+id/vistaGeneral"
+            android:title="Lista de comida"
+            android:icon="@drawable/ojo" />
     </group>
 
-    <item android:title="">
+    <!-- Separador visual opcional -->
+    <item android:title="Otras opciones">
         <menu>
             <item
                 android:id="@+id/logoutMenu"
-                android:title="Logout"
-                android:icon="@drawable/logout"/>
+                android:title="Cerrar sesión"
+                android:icon="@drawable/logout" />
         </menu>
     </item>
+
 </menu>

@@ -14,6 +14,8 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import android.provider.MediaStore
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.appcompat.app.AppCompatActivity
 import com.example.gymactive.R
 
@@ -43,6 +45,23 @@ class SettingFragment : Fragment() {
         setupOpenGalleryButton()
         setupSaveButton()
         setupCloseSettingsButton()
+
+        // Configurar TextWatcher para actualizar las preferencias al cambiar el texto
+        userNameEditText.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable) {
+                saveUserSettings(userNameEditText.text.toString(), imageView.tag?.toString() ?: "")
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
+
+        // Configurar OnTouchListener para actualizar las preferencias al tocar la imagen
+        imageView.setOnTouchListener { _, _ ->
+            saveUserSettings(userNameEditText.text.toString(), imageView.tag?.toString() ?: "")
+            false
+        }
 
         return view
     }
@@ -83,7 +102,6 @@ class SettingFragment : Fragment() {
 
     // Función para guardar los datos del usuario en SharedPreferences
     private fun saveUserSettings(userName: String, imageUri: String) {
-        Log.d("SettingFragment", "Guardando nombre de usuario: $userName y URI de imagen: $imageUri")
         val sharedPreferences: SharedPreferences = requireContext().getSharedPreferences("UserSettings", AppCompatActivity.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
         editor.putString("userName", userName)
@@ -115,3 +133,4 @@ class SettingFragment : Fragment() {
         }
     }
 }
+

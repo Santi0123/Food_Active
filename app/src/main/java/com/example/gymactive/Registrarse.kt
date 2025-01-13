@@ -2,34 +2,23 @@ package com.example.gymactive
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.Fragment
+import androidx.appcompat.app.AppCompatActivity
 import com.example.gymactive.databinding.FragmentRegistrarseBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 
-class Registrarse : Fragment() {
+class Registrarse : AppCompatActivity() {
 
-    private var _binding: FragmentRegistrarseBinding? = null
-    private val binding get() = _binding!!
-
+    private lateinit var binding: FragmentRegistrarseBinding
     private lateinit var authentication: FirebaseAuth
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentRegistrarseBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = FragmentRegistrarseBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         authentication = FirebaseAuth.getInstance()
 
@@ -40,14 +29,14 @@ class Registrarse : Fragment() {
             val privacyAccepted = binding.checkBox.isChecked
 
             if (!privacyAccepted) {
-                Toast.makeText(context, "Debe aceptar los términos y condiciones", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Debe aceptar los términos y condiciones", Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }
 
             if (email.isEmpty() || password.isEmpty() || repeatPassword.isEmpty()) {
-                Toast.makeText(context, "No debe dejar campos vacíos", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "No debe dejar campos vacíos", Toast.LENGTH_LONG).show()
             } else if (password != repeatPassword) {
-                Toast.makeText(context, "Las contraseñas no coinciden", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Las contraseñas no coinciden", Toast.LENGTH_LONG).show()
             } else {
                 registerUser(email, password)
             }
@@ -60,13 +49,13 @@ class Registrarse : Fragment() {
                 val user = authentication.currentUser
                 user?.sendEmailVerification()?.addOnCompleteListener { emailTask ->
                     if (emailTask.isSuccessful) {
-                        Toast.makeText(context, "Registro exitoso. Verifique su correo electrónico.", Toast.LENGTH_LONG).show()
+                        Toast.makeText(this, "Registro exitoso. Verifique su correo electrónico.", Toast.LENGTH_LONG).show()
                         authentication.signOut()
-                        val intent = Intent(activity, Login::class.java)
+                        val intent = Intent(this, Login::class.java)
                         startActivity(intent)
-                        activity?.finish()
+                        finish()
                     } else {
-                        Toast.makeText(context, "Registro exitoso, pero fallo al enviar verificación: ${emailTask.exception?.message}", Toast.LENGTH_LONG).show()
+                        Toast.makeText(this, "Registro exitoso, pero fallo al enviar verificación: ${emailTask.exception?.message}", Toast.LENGTH_LONG).show()
                     }
                 }
             } else {
@@ -79,18 +68,13 @@ class Registrarse : Fragment() {
         try {
             throw exception ?: Exception("Error desconocido")
         } catch (e: FirebaseAuthUserCollisionException) {
-            Toast.makeText(context, "El usuario ya existe", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "El usuario ya existe", Toast.LENGTH_LONG).show()
         } catch (e: FirebaseAuthWeakPasswordException) {
-            Toast.makeText(context, "La contraseña es demasiado débil: ${e.reason}", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "La contraseña es demasiado débil: ${e.reason}", Toast.LENGTH_LONG).show()
         } catch (e: FirebaseAuthInvalidCredentialsException) {
-            Toast.makeText(context, "El email proporcionado no es válido", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "El email proporcionado no es válido", Toast.LENGTH_LONG).show()
         } catch (e: Exception) {
-            Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Error: ${e.message}", Toast.LENGTH_LONG).show()
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

@@ -36,8 +36,6 @@
         android:textColor="@color/black"
         android:textSize="30dp"
         android:textStyle="bold"
-
-
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

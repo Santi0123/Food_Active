@@ -17,8 +17,11 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.bumptech.glide.Glide
 import com.example.gymactive.databinding.ActivityMainBinding
+import com.google.android.material.bottomappbar.BottomAppBar
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 
 class MainActivity : AppCompatActivity() {
 
@@ -29,6 +32,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mainBinding: ActivityMainBinding
     private lateinit var userNameTextView: TextView
     private lateinit var userImageView: ImageView
+    private lateinit var bottomAppBar: BottomAppBar
+    private lateinit var bottomNavigationView: BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,11 +42,9 @@ class MainActivity : AppCompatActivity() {
         mainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mainBinding.root) // Establece el layout de la actividad
 
+
         // Configuración del título de la barra superior
         supportActionBar?.title = "Gym Active"
-
-        // Inicialización de FirebaseAuth para manejar usuarios
-        auth = FirebaseAuth.getInstance()
 
         // Configuración del Toolbar
         val toolbar = mainBinding.appBarLayoutDrawer.toolbar
@@ -62,6 +65,73 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         // Configuración del NavigationView con el controlador de navegación
         mainBinding.navView.setupWithNavController(navController)
+
+        // Inicialización del BottomAppBar y el BottomNavigationView
+        bottomAppBar = findViewById(R.id.my_bottom_app_bar)
+        bottomNavigationView = findViewById(R.id.my_bottom_navigation)
+        bottomNavigationView.setupWithNavController(navController)
+
+        // Configuración del BottomAppBar
+        bottomAppBar.setNavigationOnClickListener {
+            drawerLayout.openDrawer(GravityCompat.START)
+        }
+        mainBinding.navView.setNavigationItemSelectedListener { item ->
+
+                when (item.itemId) {
+                    R.id.vistaGeneral->{
+                        navController.navigate(R.id.vistaGeneral)
+                        drawerLayout.closeDrawer(GravityCompat.START)
+
+                    }
+                    R.id.settingMenu -> { // Navegar a la configuración
+                        navController.navigate(R.id.settingMenu)
+                        drawerLayout.closeDrawer(GravityCompat.START)
+
+                    }
+                    R.id.comidaMenu -> { // Navegar al menú de comida
+                        navController.navigate(R.id.comidaMenu)
+                        drawerLayout.closeDrawer(GravityCompat.START)
+
+                    }
+                    R.id.logoutMenu -> {
+                        logout()
+                        drawerLayout.closeDrawer(GravityCompat.START)
+
+                    }
+                    else ->  drawerLayout.closeDrawer(GravityCompat.START)
+                }
+            true
+        }
+
+        // Configuración del BottomNavigationView
+        bottomNavigationView.setOnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.settingMenu -> {
+                    navController.navigate(R.id.settingMenu)
+                    true
+                }
+                R.id.comidaMenu -> {
+                    navController.navigate(R.id.comidaMenu)
+                    true
+                }
+                R.id.home2 -> {
+                    navController.navigate(R.id.home2)
+                    true
+                }
+
+                else -> false
+            }
+        }
+
+        // Listener para actualizar el BottomNavigationView cuando cambie el destino
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.home2 -> bottomNavigationView.menu.findItem(R.id.home2).isChecked = true
+                R.id.settingMenu -> bottomNavigationView.menu.findItem(R.id.settingMenu).isChecked = true
+                R.id.comidaMenu -> bottomNavigationView.menu.findItem(R.id.comidaMenu).isChecked = true
+                // Agrega más casos si tienes otros destinos
+            }
+        }
 
         // Carga de datos del usuario para mostrar en el header del Navigation Drawer
         loadUserData(mainBinding.navView)
@@ -98,46 +168,35 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // Función para cerrar sesión del usuario
     private fun logout() {
-        auth.signOut() // Cierra la sesión en Firebase
-        val sharedPreferences = getSharedPreferences("session_prefs", MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-        editor.putBoolean("is_logged_in", false) // Marca al usuario como no logueado
-        editor.apply() // Guarda los cambios en SharedPreferences
+        FirebaseAuth.getInstance().signOut()
 
-        redirectToLogin() // Redirige al login
-    }
-
-    // Función para redirigir al login tras cerrar sesión
-    private fun redirectToLogin() {
-        val intent = Intent(this, Login::class.java) // Crea una intención para ir a la actividad Login
-        startActivity(intent) // Inicia la actividad
-        finish() // Finaliza la actividad actual
+        getSharedPreferences("session_prefs", MODE_PRIVATE)
+            .edit()
+            .putBoolean("is_logged_in",false)
+            .apply()
+        navController.popBackStack(R.id.vistaGeneral,false)
+        navController.navigate(R.id.vistaGeneral)
     }
 
     // Función para cargar los datos guardados del usuario desde SharedPreferences
     private fun loadUserData(navView: NavigationView) {
-        val sharedPreferences = getSharedPreferences("UserSettings", MODE_PRIVATE) // Accede a SharedPreferences
-        val userName = sharedPreferences.getString("userName", "Usuario no encontrado") // Obtiene el nombre del usuario
-        val imageUri = sharedPreferences.getString("imageUri", "") // Obtiene la URI de la imagen
+        val sharedPreferences = getSharedPreferences("UserSettings", MODE_PRIVATE)
+        val userName = sharedPreferences.getString("userName", "Usuario no encontrado")
+        val imageUri = sharedPreferences.getString("imageUri", "")
 
-        // Accede al header del NavigationView
         val headerView = navView.getHeaderView(0)
+        userNameTextView = headerView.findViewById(R.id.userNameTextView)
+        userImageView = headerView.findViewById(R.id.userImageView)
 
-        // Inicializa las vistas del header
-        userNameTextView = headerView.findViewById(R.id.userNameTextView) // TextView del nombre
-        userImageView = headerView.findViewById(R.id.userImageView) // ImageView de la imagen
-
-        // Establece el nombre del usuario en el TextView
         userNameTextView.text = userName
 
-        // Carga la imagen del usuario usando Glide si la URI no está vacía
         if (!imageUri.isNullOrEmpty()) {
             Glide.with(this)
                 .load(imageUri)
-                .circleCrop() // Hace que la imagen sea circular
-                .into(userImageView) // Carga la imagen en el ImageView
+                .circleCrop()
+                .into(userImageView)
         }
     }
+
 }

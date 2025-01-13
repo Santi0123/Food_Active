@@ -9,6 +9,7 @@
     tools:context=".MainActivity"
     android:fitsSystemWindows="true">
 
+    <!-- Contenedor de fragmentos para el NavHostFragment -->
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainerView"
         android:name="androidx.navigation.fragment.NavHostFragment"
@@ -17,12 +18,22 @@
         app:defaultNavHost="true"
         app:navGraph="@navigation/nav_graph" />
 
+    <!-- Layout principal de la app -->
     <include
         android:id="@+id/app_bar_layout_drawer"
         layout="@layout/activity_main_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <include
+        android:id="@+id/app_bottom_bar"
+        layout="@layout/app_bottom_bar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
+
+    <!-- NavigationView para el Drawer -->
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"
@@ -30,5 +41,10 @@
         app:menu="@menu/nav_menu_extend"
         app:headerLayout="@layout/header_menu"
         android:layout_gravity="start"
-        android:fitsSystemWindows="true"/>
+        android:fitsSystemWindows="true"
+        android:background="@color/fondo_de_la_aplicacion" />
+
+
+
+
 </androidx.drawerlayout.widget.DrawerLayout>

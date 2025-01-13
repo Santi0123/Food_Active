@@ -5,14 +5,12 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import com.example.gymactive.databinding.ActivityLoginBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import java.lang.Exception
 
 class Login : AppCompatActivity() {
 
@@ -32,15 +30,13 @@ class Login : AppCompatActivity() {
 
     private fun initUI() {
         loginBinding.aceptarBoton.setOnClickListener { startLogin() }
-        loginBinding.registrarse.setOnClickListener { loadFragment(Registrarse()) }
+        loginBinding.registrarse.setOnClickListener { openRegisterActivity() }
         loginBinding.recordarContrasenna.setOnClickListener { recoverPassword() }
     }
 
-    private fun loadFragment(fragment: Fragment) {
-        val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.fragment_container, fragment)
-        transaction.addToBackStack(null)
-        transaction.commit()
+    private fun openRegisterActivity() {
+        val intent = Intent(this, Registrarse::class.java)
+        startActivity(intent)
     }
 
     private fun startLogin() {
@@ -56,7 +52,6 @@ class Login : AppCompatActivity() {
             if (task.isSuccessful) {
                 val user = auth.currentUser
                 if (user?.isEmailVerified == true) {
-                    // Almacena el estado de la sesión en SharedPreferences
                     val sharedPreferences = getSharedPreferences("session_prefs", MODE_PRIVATE)
                     val editor = sharedPreferences.edit()
                     editor.putBoolean("is_logged_in", true)

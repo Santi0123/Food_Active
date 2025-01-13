@@ -32,6 +32,7 @@ class Controller(private val context: Context, private val openGalleryLauncher: 
         initData()
     }
 
+
     fun setAdapter(binding: FragmentComidaBinding) {
         layoutManager = LinearLayoutManager(context)
         binding.rvComida.layoutManager = layoutManager
@@ -49,7 +50,6 @@ class Controller(private val context: Context, private val openGalleryLauncher: 
 
     fun initBotonAgregar(binding: FragmentComidaBinding, fragment: ComidaActFragment) {
         binding.btnAgregar.setOnClickListener {
-            Log.d("Controller", "Button 'Agregar comida' clicked")
             agregarComida(binding, fragment)
         }
     }

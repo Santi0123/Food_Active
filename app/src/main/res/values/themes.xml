@@ -17,5 +17,6 @@
     </style>
 
     <style name="Theme.GymActive" parent="Base.Theme.GymActive" />
+
 </resources>
 

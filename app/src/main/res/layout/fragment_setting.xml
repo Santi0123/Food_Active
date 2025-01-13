@@ -75,14 +75,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity=""
+            android:layout_marginTop="36dp"
             android:hint="Ingrese su nombre"
             android:inputType="text"
             android:textColor="@color/black"
             app:layout_anchor="@+id/constraintLayout"
             app:layout_anchorGravity="top|center"
-            tools:ignore="MissingConstraints"
-            tools:layout_editor_absoluteX="16dp"
-            tools:layout_editor_absoluteY="94dp" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="MissingConstraints" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

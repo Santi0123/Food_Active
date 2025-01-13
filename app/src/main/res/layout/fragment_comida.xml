@@ -7,6 +7,12 @@
     android:background="@color/fondo_de_la_aplicacion"
     tools:context=".fragment.ComidaActFragment">
 
+    <!-- RecyclerView para mostrar los elementos -->
+
+    <!-- Botón para agregar comida -->
+
+    <!-- LinearLayout para mostrar el anuncio y el botón de cierre -->
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_comida"
         android:layout_width="match_parent"
@@ -15,14 +21,14 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_agregar"
         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-        android:layout_width="118dp"
-        android:layout_height="60dp"
+        android:layout_width="145dp"
+        android:layout_height="57dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
         android:layout_marginStart="18dp"
         android:layout_marginTop="642dp"
         android:layout_marginEnd="21dp"
-        android:layout_marginBottom="29dp"
+        android:layout_marginBottom="98dp"
         android:text="Agregar comida"
         android:textColor="@color/black"
         app:backgroundTint="@color/boton_agragar"
@@ -31,5 +37,6 @@
         app:iconPadding="10dp"
         app:strokeColor="@color/boton_agragar"
         app:strokeWidth="1dp" />
+
 
 </RelativeLayout>

@@ -19,6 +19,12 @@
     <color name="boton_borrar">#E57373</color> <!-- Rojo terracota suave -->
     <color name="boton_agragar">#A8D08D</color> <!-- Verde suave -->
     <color name="boton_editar">#A388B6</color>
+    <color name="navegation">#A0A665</color>
+
+    <color name="colorSurface">#FFFFFFFF</color>
+    <color name="colorOnSurface">#FFFFFFFF</color>
+    <color name="color_dialog_title_text">#004656</color>
+    <color name="color_dialog_button">#004656</color>
 
 
 </resources>
