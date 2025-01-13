@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragment.VistaGeneral"
+    android:background="@color/fondo_de_la_aplicacion">
+
+    <!-- RecyclerView para mostrar los elementos -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_comidas"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="57dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="56dp"
+        android:background="@color/white2"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_gravity="bottom">
+
+        <!-- Anuncio de texto -->
+
+        <!-- Botón para quitar el anuncio -->
+        <TextView
+            android:id="@+id/adBanner"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/white2"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="¡Anuncio Simulado!"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <ImageButton
+            android:id="@+id/btnCloseAd"
+            android:layout_width="36dp"
+            android:layout_height="37dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/delete" />
+    </LinearLayout>
+
+</FrameLayout>
