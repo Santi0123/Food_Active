@@ -257,3 +257,500 @@ Una vez que todos los campos estan correctos se le da a registrarse y ya se desv
 En el login no se puede iniciar sesión hasta que la cuenta no se haya verificado a través de un correo electrónico.
 
 Una vez verificado se insetan los datos en la pantalla del login ya si todo va podremos entrar en la la aplicación en caso que se nos olvide la contraseña se nos enviará un correo de verificación
+
+## 🛠️ Versión 1.4
+
+En esta versión se tiene que implementar a nuestro el Navigation Drawer, un toolbar y un Navigation Botton. Para ello lo pirmero de todo ha sido pasar todos los Activitys a Fragment. Una vez ya cambiado ya esta preparado para funcionar.
+
+### Primero creamos el nav_graph:
+
+#### Explicación del archivo de navegación en XML para Android
+
+Este archivo define las rutas de navegación entre diferentes fragmentos (pantallas) de la aplicación, permitiendo gestionar las transiciones y acciones dentro del `Navigation Component`.
+
+##### Estructura del XML
+
+```xml
+   <?xml version="1.0" encoding="utf-8"?>
+   <navigation xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+       xmlns:tools="http://schemas.android.com/tools"
+       android:id="@+id/nav_graph"
+       app:startDestination="@id/home2">
+
+       <fragment
+           android:id="@+id/home2"
+           android:name="com.example.gymactive.fragment.Home"
+           android:label="Home"
+           tools:layout="@layout/fragment_home" />
+       <fragment
+           android:id="@+id/comidaMenu"
+           android:name="com.example.gymactive.fragment.ComidaActFragment"
+           android:label="Comida"
+           tools:layout="@layout/fragment_comida" >
+           <action
+               android:id="@+id/action_comidaMenu_to_home2"
+               app:destination="@id/home2" />
+       </fragment>
+       <fragment
+           android:id="@+id/settingMenu"
+           android:name="com.example.gymactive.fragment.SettingFragment"
+           android:label="Setting"
+           tools:layout="@layout/fragment_setting" >
+           <action
+               android:id="@+id/action_settingMenu_to_home2"
+               app:destination="@id/home2" />
+       </fragment>
+       <fragment
+           android:id="@+id/vistaGeneral"
+           android:name="com.example.gymactive.fragment.VistaGeneral"
+           android:label="Listado de comida"
+           tools:layout="@layout/fragment_vista_general" >
+           <action
+               android:id="@+id/action_vistaGeneral_to_home2"
+               app:destination="@id/home2" />
+       </fragment>
+   </navigation>
+```
+
+### Carpeta menu:
+
+Esta va a contener lo siguientes ficheros:
+
+#### nav_menu_extend
+
+Este archivo XML define un menú estructurado que se puede usar en un `Navigation Drawer`, un `Toolbar`, o cualquier otro componente que soporte menús. Su diseño organiza las opciones de navegación y acciones en categorías, permitiendo mejorar la experiencia del usuario.
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <!-- Grupo principal con comportamiento de selección única -->
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/comidaMenu"
+            android:title="Comida"
+            android:icon="@drawable/comida" />
+
+        <item
+            android:id="@+id/settingMenu"
+            android:title="Configuración"
+            android:icon="@drawable/setting" />
+
+        <item
+            android:id="@+id/vistaGeneral"
+            android:title="Lista de comida"
+            android:icon="@drawable/ojo" />
+    </group>
+
+    <!-- Separador visual opcional -->
+    <item android:title="Otras opciones">
+        <menu>
+            <item
+                android:id="@+id/logoutMenu"
+                android:title="Cerrar sesión"
+                android:icon="@drawable/logout" />
+        </menu>
+    </item>
+
+</menu>
+```
+
+
+
+#### menu.xml
+
+Este archivo XML describe un menú básico que podría utilizarse en componentes como un `PopupMenu`, un `Toolbar`, o un `Navigation Drawer`. Contiene tres opciones principales, cada una con un identificador único, título y un ícono asociado.
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/comidaMenu"
+        android:title="Comida"
+        android:icon="@drawable/comida"
+        />
+
+    <item
+        android:id="@+id/logoutMenu"
+        android:title="Logout"
+        android:icon="@drawable/logout"
+        />
+    <item
+        android:id="@+id/settingMenu"
+        android:title="Setting"
+        android:icon="@drawable/setting"/>
+
+</menu>
+```
+
+
+#### bottom_menu.xml
+
+Este archivo XML define un menú básico con varias opciones que podrían utilizarse en un `Navigation Drawer`, `Toolbar`, o cualquier otro componente compatible. Cada opción está habilitada, incluye un ícono y tiene un identificador único.
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/settingMenu"
+        android:title="Setting"
+        android:enabled="true"
+
+        android:icon="@drawable/setting"/>
+
+    <item
+        android:id="@+id/home2"
+        android:title="Home"
+        android:enabled="true"
+        android:icon="@drawable/house"/>
+
+    <item
+        android:id="@+id/comidaMenu"
+        android:title="Comida"
+        android:enabled="true"
+        android:icon="@drawable/comida"
+        />
+    <item
+        android:id="@+id/vistaGeneral"
+        android:title="Mi lista"
+        android:enabled="true"
+        android:icon="@drawable/ojo"
+        />
+
+</menu>
+
+```
+
+### Carpeta Layout
+
+#### header_menu.xml
+
+Este archivo XML define un diseño utilizando `ConstraintLayout`, que organiza y alinea elementos de manera eficiente en Android. El diseño incluye un `CardView` con una imagen, y dos `TextView` para mostrar el nombre y el correo del usuario.
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="180dp"
+    android:background="@color/color_caja"
+    android:padding="20dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView3"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="16dp"
+        android:background="@color/color_caja"
+        app:cardCornerRadius="40dp"
+        app:cardElevation="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/userImageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/foto_principal" />
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/userNameTextView"
+        android:layout_width="163dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="104dp"
+        android:layout_marginTop="36dp"
+        android:text="Santi"
+        android:textColor="@color/black"
+        android:textSize="30dp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/userEmailTextView"
+        android:layout_width="378dp"
+        android:layout_height="42dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="100dp"
+        android:text="santiagofuentesespinosa71@gmail.com"
+        android:textColor="@color/black"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+```
+
+#### container_fragment.xml
+
+Este archivo XML define una estructura básica que utiliza un `LinearLayout` como contenedor raíz y un `FragmentContainerView` para gestionar la navegación dentro de la aplicación.
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragmentContainerView"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/nav_graph" />
+</LinearLayout>
+```
+
+#### app_bottom_bar.xml
+
+Este archivo XML define una interfaz basada en un `CoordinatorLayout` que incluye un `BottomAppBar` y un `BottomNavigationView`. Este diseño es común en aplicaciones modernas que utilizan Material Design para una navegación más fluida e intuitiva.
+
+```xml
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <!-- Aquí puedes colocar tu contenido principal o fragmentos -->
+
+    <!-- BottomAppBar -->
+    <com.google.android.material.bottomappbar.BottomAppBar
+        android:id="@+id/my_bottom_app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:backgroundTint="@color/color_caja"
+        app:fabCradleMargin="10dp"
+        app:fabCradleRoundedCornerRadius="50dp">
+    </com.google.android.material.bottomappbar.BottomAppBar>
+
+    <!-- BottomNavigationView -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/my_bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_caja"
+        app:labelVisibilityMode="labeled"
+        app:layout_anchor="@+id/my_bottom_app_bar"
+        app:layout_anchorGravity="center"
+        app:menu="@menu/bottom_menu" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+```
+
+#### activity_main_content.xml
+
+Este archivo XML utiliza un `CoordinatorLayout` como contenedor principal para organizar una barra de herramientas (`Toolbar`) dentro de un `AppBarLayout` y un contenedor de fragmentos (`FrameLayout`). Este diseño sigue las pautas de Material Design y es común para aplicaciones que necesitan una barra superior fija y un área para mostrar contenido dinámico.
+
+```xml
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/color_caja"
+            app:menu="@menu/menu"
+            app:popupTheme="@style/ThemeOverlay.MaterialComponents.Light" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <FrameLayout
+        android:id="@+id/fragmentContainerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+```
+
+
+#### activity_main.xml
+
+Este archivo XML define un diseño que utiliza un `DrawerLayout` como contenedor principal, con un menú de navegación lateral (Drawer) y fragmentos dinámicos a través de un `NavHostFragment`. También incluye barras de herramientas y barra inferior.
+
+```xml
+<androidx.drawerlayout.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:openDrawer="start"
+    tools:context=".MainActivity"
+    android:fitsSystemWindows="true">
+
+    <!-- Contenedor de fragmentos para el NavHostFragment -->
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragmentContainerView"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/nav_graph" />
+
+    <!-- Layout principal de la app -->
+    <include
+        android:id="@+id/app_bar_layout_drawer"
+        layout="@layout/activity_main_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <include
+        android:id="@+id/app_bottom_bar"
+        layout="@layout/app_bottom_bar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
+    <!-- NavigationView para el Drawer -->
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        app:menu="@menu/nav_menu_extend"
+        app:headerLayout="@layout/header_menu"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        android:background="@color/fondo_de_la_aplicacion" />
+
+</androidx.drawerlayout.widget.DrawerLayout>
+
+```
+
+### MainActivity.kt
+
+El método `onCreate` se ejecuta cuando la actividad es creada. En este método, se inicializan los componentes visuales, se configura la navegación y se realiza la vinculación con los elementos del layout. A continuación, se explica cada sección del código.
+
+```kotlin
+override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        // Inicialización del Binding para acceder a las vistas definidas en el layout XML
+        mainBinding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(mainBinding.root) // Establece el layout de la actividad
+
+
+        // Configuración del título de la barra superior
+        supportActionBar?.title = "Gym Active"
+
+        // Configuración del Toolbar
+        val toolbar = mainBinding.appBarLayoutDrawer.toolbar
+        setSupportActionBar(toolbar)
+
+        // Configuración del DrawerLayout y el Navigation Component
+        drawerLayout = mainBinding.drawerLayout
+        val navHost = supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
+        navController = navHost.navController // Controlador de navegación
+
+        // Configuración de los destinos principales y el DrawerLayout
+        appBarConfiguration = AppBarConfiguration(
+            setOf(R.id.home2), // Destinos principales
+            drawerLayout // DrawerLayout asociado
+        )
+
+        // Vinculación del AppBar con el controlador de navegación
+        setupActionBarWithNavController(navController, appBarConfiguration)
+        // Configuración del NavigationView con el controlador de navegación
+        mainBinding.navView.setupWithNavController(navController)
+
+        // Inicialización del BottomAppBar y el BottomNavigationView
+        bottomAppBar = findViewById(R.id.my_bottom_app_bar)
+        bottomNavigationView = findViewById(R.id.my_bottom_navigation)
+        bottomNavigationView.setupWithNavController(navController)
+
+        // Configuración del BottomAppBar
+        bottomAppBar.setNavigationOnClickListener {
+            drawerLayout.openDrawer(GravityCompat.START)
+        }
+        mainBinding.navView.setNavigationItemSelectedListener { item ->
+
+                when (item.itemId) {
+                    R.id.vistaGeneral->{
+                        navController.navigate(R.id.vistaGeneral)
+                        drawerLayout.closeDrawer(GravityCompat.START)
+
+                    }
+                    R.id.settingMenu -> { // Navegar a la configuración
+                        navController.navigate(R.id.settingMenu)
+                        drawerLayout.closeDrawer(GravityCompat.START)
+
+                    }
+                    R.id.comidaMenu -> { // Navegar al menú de comida
+                        navController.navigate(R.id.comidaMenu)
+                        drawerLayout.closeDrawer(GravityCompat.START)
+
+                    }
+                    R.id.logoutMenu -> {
+                        logout()
+                        drawerLayout.closeDrawer(GravityCompat.START)
+
+                    }
+                    else ->  drawerLayout.closeDrawer(GravityCompat.START)
+                }
+            true
+        }
+
+        // Configuración del BottomNavigationView
+        bottomNavigationView.setOnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.settingMenu -> {
+                    navController.navigate(R.id.settingMenu)
+                    true
+                }
+                R.id.comidaMenu -> {
+                    navController.navigate(R.id.comidaMenu)
+                    true
+                }
+                R.id.home2 -> {
+                    navController.navigate(R.id.home2)
+                    true
+                }
+                R.id.vistaGeneral ->{
+                    navController.navigate(R.id.vistaGeneral)
+                    true
+                }
+
+                else -> false
+            }
+        }
+
+        // Listener para actualizar el BottomNavigationView cuando cambie el destino
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.home2 -> bottomNavigationView.menu.findItem(R.id.home2).isChecked = true
+                R.id.settingMenu -> bottomNavigationView.menu.findItem(R.id.settingMenu).isChecked = true
+                R.id.comidaMenu -> bottomNavigationView.menu.findItem(R.id.comidaMenu).isChecked = true
+            }
+        }
+
+        // Carga de datos del usuario para mostrar en el header del Navigation Drawer
+        loadUserData(mainBinding.navView)
+    }
+```
