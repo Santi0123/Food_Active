@@ -76,5 +76,12 @@ class ComidaActFragment : Fragment() {
             startActivity(Intent(requireContext(), Login::class.java))
             requireActivity().finish()
         }
+        val userName = requireActivity().findViewById<TextView>(R.id.userNameTextView)
+        val userEmail = requireActivity().findViewById<TextView>(R.id.userEmailTextView)
+        if(currentUser != null){
+            val emailUser = currentUser.email.toString().split("0")
+            userName.setText(emailUser[0])
+            userEmail.setText(currentUser.email.toString())
+        }
     }
 }

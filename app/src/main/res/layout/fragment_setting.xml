@@ -67,25 +67,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/userNameEditText"
-            app:layout_constraintVertical_bias="0.184" />
-
-        <EditText
-            android:id="@+id/userNameEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity=""
-            android:layout_marginTop="36dp"
-            android:hint="Ingrese su nombre"
-            android:inputType="text"
-            android:textColor="@color/black"
-            app:layout_anchor="@+id/constraintLayout"
-            app:layout_anchorGravity="top|center"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="MissingConstraints" />
+            app:layout_constraintVertical_bias="0.234" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

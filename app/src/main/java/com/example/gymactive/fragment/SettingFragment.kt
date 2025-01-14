@@ -4,19 +4,17 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import android.provider.MediaStore
-import android.text.Editable
-import android.text.TextWatcher
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
 import com.example.gymactive.R
 
 class SettingFragment : Fragment() {
@@ -25,57 +23,33 @@ class SettingFragment : Fragment() {
         private const val PICK_IMAGE = 100  // Código de solicitud para abrir la galería
     }
 
-    private lateinit var userNameEditText: EditText
     private lateinit var imageView: ImageView
     private lateinit var saveButton: Button
     private lateinit var openGalleryButton: Button
     private lateinit var closeSettingsButton: Button
+    private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflar el layout del fragmento
         val view = inflater.inflate(R.layout.fragment_setting, container, false)
-
-        // Inicializar las vistas
         initializeViews(view)
-
-        // Configurar los botones
+        sharedPreferences = requireContext().getSharedPreferences("UserSettings", AppCompatActivity.MODE_PRIVATE)
+        loadUserSettings()
         setupOpenGalleryButton()
         setupSaveButton()
         setupCloseSettingsButton()
-
-        // Configurar TextWatcher para actualizar las preferencias al cambiar el texto
-        userNameEditText.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable) {
-                saveUserSettings(userNameEditText.text.toString(), imageView.tag?.toString() ?: "")
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-        })
-
-        // Configurar OnTouchListener para actualizar las preferencias al tocar la imagen
-        imageView.setOnTouchListener { _, _ ->
-            saveUserSettings(userNameEditText.text.toString(), imageView.tag?.toString() ?: "")
-            false
-        }
-
         return view
     }
 
-    // Función para inicializar las vistas
     private fun initializeViews(view: View) {
-        userNameEditText = view.findViewById(R.id.userNameEditText)
         imageView = view.findViewById(R.id.imageView)
         saveButton = view.findViewById(R.id.saveButton)
         openGalleryButton = view.findViewById(R.id.openGalleryButton)
         closeSettingsButton = view.findViewById(R.id.cerrarAjustes)
     }
 
-    // Configurar el botón para abrir la galería y seleccionar una imagen
     private fun setupOpenGalleryButton() {
         openGalleryButton.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
@@ -83,54 +57,55 @@ class SettingFragment : Fragment() {
         }
     }
 
-    // Configurar el botón para guardar el nombre y la imagen en las preferencias compartidas
     private fun setupSaveButton() {
         saveButton.setOnClickListener {
-            val userName = userNameEditText.text.toString()
-            if (userName.isEmpty()) {
-                Toast.makeText(requireContext(), "Por favor ingresa tu nombre", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            // Obtener URI de la imagen
             val imageUri = imageView.tag?.toString() ?: ""
-
-            // Guardar en SharedPreferences
-            saveUserSettings(userName, imageUri)
+            saveUserSettings(imageUri)
         }
     }
 
-    // Función para guardar los datos del usuario en SharedPreferences
-    private fun saveUserSettings(userName: String, imageUri: String) {
-        val sharedPreferences: SharedPreferences = requireContext().getSharedPreferences("UserSettings", AppCompatActivity.MODE_PRIVATE)
+    private fun saveUserSettings(imageUri: String) {
         val editor = sharedPreferences.edit()
-        editor.putString("userName", userName)
         editor.putString("imageUri", imageUri)
-        editor.apply()  // Aplicar los cambios
-
+        editor.apply()
         Toast.makeText(requireContext(), "Configuración guardada", Toast.LENGTH_SHORT).show()
     }
 
-    // Configurar el botón para cerrar los ajustes
+    private fun loadUserSettings() {
+        val imageUriString = sharedPreferences.getString("imageUri", "")
+        if (!imageUriString.isNullOrEmpty()) {
+            Glide.with(this)
+                .load(Uri.parse(imageUriString))
+                .into(imageView)
+            imageView.tag = imageUriString
+        }
+    }
+
     private fun setupCloseSettingsButton() {
         closeSettingsButton.setOnClickListener {
-            // Lógica para volver al fragment anterior o cerrar el fragmento
             parentFragmentManager.popBackStack()
         }
     }
 
-    // Método para manejar la selección de imagen desde la galería
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-
         if (requestCode == PICK_IMAGE && resultCode == AppCompatActivity.RESULT_OK && data != null) {
             val imageUri: Uri? = data.data
-            imageView.setImageURI(imageUri)
+            if (imageUri != null) {
+                Glide.with(this)
+                    .load(imageUri)
+                    .into(imageView)
+                imageView.tag = imageUri.toString()
 
-            // Guardar la URI de la imagen en el Tag de la ImageView
-            imageView.tag = imageUri.toString()
-            Log.d("SettingFragment", "Imagen seleccionada: $imageUri")
+                // Guarda la URI de la imagen en SharedPreferences
+                val editor = sharedPreferences.edit()
+                editor.putString("imageUri", imageUri.toString())
+                editor.apply()
+
+                // Mensaje de log para verificar que la URI se guarda correctamente
+                Log.d("SettingFragment", "Imagen seleccionada: $imageUri")
+            }
         }
     }
-}
 
+}

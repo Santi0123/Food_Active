@@ -19,5 +19,11 @@
         android:enabled="true"
         android:icon="@drawable/comida"
         />
+    <item
+        android:id="@+id/vistaGeneral"
+        android:title="Mi lista"
+        android:enabled="true"
+        android:icon="@drawable/ojo"
+        />
 
 </menu>

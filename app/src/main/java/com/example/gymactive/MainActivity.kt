@@ -118,6 +118,10 @@ class MainActivity : AppCompatActivity() {
                     navController.navigate(R.id.home2)
                     true
                 }
+                R.id.vistaGeneral ->{
+                    navController.navigate(R.id.vistaGeneral)
+                    true
+                }
 
                 else -> false
             }
@@ -129,7 +133,6 @@ class MainActivity : AppCompatActivity() {
                 R.id.home2 -> bottomNavigationView.menu.findItem(R.id.home2).isChecked = true
                 R.id.settingMenu -> bottomNavigationView.menu.findItem(R.id.settingMenu).isChecked = true
                 R.id.comidaMenu -> bottomNavigationView.menu.findItem(R.id.comidaMenu).isChecked = true
-                // Agrega más casos si tienes otros destinos
             }
         }
 
@@ -179,22 +182,17 @@ class MainActivity : AppCompatActivity() {
         navController.navigate(R.id.vistaGeneral)
     }
 
-    // Función para cargar los datos guardados del usuario desde SharedPreferences
     private fun loadUserData(navView: NavigationView) {
         val sharedPreferences = getSharedPreferences("UserSettings", MODE_PRIVATE)
-        val userName = sharedPreferences.getString("userName", "Usuario no encontrado")
         val imageUri = sharedPreferences.getString("imageUri", "")
 
         val headerView = navView.getHeaderView(0)
-        userNameTextView = headerView.findViewById(R.id.userNameTextView)
         userImageView = headerView.findViewById(R.id.userImageView)
-
-        userNameTextView.text = userName
 
         if (!imageUri.isNullOrEmpty()) {
             Glide.with(this)
                 .load(imageUri)
-                .circleCrop()
+                .circleCrop()  // Opcional: para mostrar la imagen como un círculo
                 .into(userImageView)
         }
     }

@@ -30,4 +30,7 @@
         app:layout_anchorGravity="center"
         app:menu="@menu/bottom_menu" />
 
+
+
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
