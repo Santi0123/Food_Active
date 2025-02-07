@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment.VistaGeneral"
+    tools:context=".ui.views.fragment.VistaGeneral.VistaGeneralFragment"
     android:background="@color/fondo_de_la_aplicacion">
 
     <!-- RecyclerView para mostrar los elementos -->

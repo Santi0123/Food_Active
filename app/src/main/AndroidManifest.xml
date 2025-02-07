@@ -8,6 +8,7 @@
 
     <application
         android:allowBackup="true"
+        android:name=".MyApplication"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@drawable/foto_principal"
@@ -17,13 +18,13 @@
         android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"
         tools:targetApi="31" >
         <activity
-            android:name=".Registrarse"
+            android:name=".ui.views.activities.Registrarse"
             android:exported="false" />
         <activity
-            android:name=".Login"
+            android:name=".ui.views.activities.Login"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.views.activities.MainActivity"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

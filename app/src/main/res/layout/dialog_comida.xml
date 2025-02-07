@@ -20,15 +20,12 @@
         android:layout_height="wrap_content"
         android:hint="Descripción"
         android:inputType="text"/>
-
-    <ImageButton
-        android:id="@+id/galeria"
+    <EditText
+        android:id="@+id/imagen"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/selectableItemBackground"
-        android:contentDescription="Agregar Incidencia"
-        android:src="@drawable/galeria"
-        android:layout_gravity=""/>
+        android:hint="Manda el enlace de la foto"
+        android:inputType="text"/>
 
     <ImageView
         android:id="@+id/imagen_preview"

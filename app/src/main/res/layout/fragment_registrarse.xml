@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/fondo_de_la_aplicacion"
-    tools:context=".Registrarse">
+    tools:context=".ui.views.activities.Registrarse">
 
     <LinearLayout
         android:id="@+id/linearLayout"

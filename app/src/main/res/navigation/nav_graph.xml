@@ -7,12 +7,12 @@
 
     <fragment
         android:id="@+id/home2"
-        android:name="com.example.gymactive.fragment.Home"
+        android:name="com.example.gymactive.ui.views.fragment.Home.Home"
         android:label="Home"
         tools:layout="@layout/fragment_home" />
     <fragment
         android:id="@+id/comidaMenu"
-        android:name="com.example.gymactive.fragment.ComidaActFragment"
+        android:name="com.example.gymactive.ui.views.fragment.Comida.ComidaFragment"
         android:label="Comida"
         tools:layout="@layout/fragment_comida" >
         <action
@@ -21,7 +21,7 @@
     </fragment>
     <fragment
         android:id="@+id/settingMenu"
-        android:name="com.example.gymactive.fragment.SettingFragment"
+        android:name="com.example.gymactive.ui.views.fragment.Setting.SettingFragment"
         android:label="Setting"
         tools:layout="@layout/fragment_setting" >
         <action
@@ -30,7 +30,7 @@
     </fragment>
     <fragment
         android:id="@+id/vistaGeneral"
-        android:name="com.example.gymactive.fragment.VistaGeneral"
+        android:name="com.example.gymactive.ui.views.fragment.VistaGeneral.VistaGeneralFragment"
         android:label="Listado de comida"
         tools:layout="@layout/fragment_vista_general" >
         <action
