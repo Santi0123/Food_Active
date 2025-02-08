@@ -754,3 +754,154 @@ override fun onCreate(savedInstanceState: Bundle?) {
         loadUserData(mainBinding.navView)
     }
 ```
+
+---
+## ⚒️ Versión 2.1
+
+### Pasar la aplicación a Model View View Model (MVVM)
+
+Esta versión reestructura la aplicación siguiendo el patrón MVVM, organizando el código en capas para mejorar la mantenibilidad y escalabilidad.
+
+---
+
+### 📚 Estructura de Carpetas:
+
+#### **Carpeta `comida`**:
+- **`objects`**: Contiene `ComidasData`, que almacena los datos.
+- **`repository`**: Contiene `ComidaRepository`, encargado de acceder y gestionar los datos.
+- **`vistaGeneral`**: Contiene elementos compartidos a nivel general de la aplicación.
+
+#### **Carpeta `domain` (Capa de dominio - Lógica de negocio)**:
+- **`Comidas`**:
+  - **`interfaces`**: Define `InterfacesDAO`, que contiene las reglas de acceso a los datos.
+  - **`models`**: Contiene `Comida` y `ListComida`, representaciones de los datos.
+  - **`usecase`**: Implementa los casos de uso de la aplicación:
+    - **`DeleteComidasUseCase`**: Permite eliminar una comida de la lista según su posición.
+    - **`GetComidaByPosUseCase`**: Obtiene una comida por su posición en la lista.
+    - **`GetComidaMLUseCase`**: Recupera la lista completa de comidas disponibles.
+    - **`GetComidaNaviteUseCase`**: Obtiene una lista de comidas filtradas por un criterio nativo.
+    - **`GetComidasByIdUseCase`**: Devuelve una comida según su identificador.
+    - **`NewComidaUseCase`**: Agrega una nueva comida si no existe previamente en la lista.
+    - **`UpdateComidasCaseUse`**: Permite actualizar una comida existente según su posición.
+- **`VistaGeneral`**: Contiene elementos generales relacionados con la vista.
+
+#### **Carpeta `frameworks`**:
+Contiene componentes auxiliares y de infraestructura.
+
+#### **Carpeta `ui` (Capa de presentación)**:
+- **`viewmodel`**: Contiene `ComidasViewModel`, responsable de gestionar la lógica de presentación.
+- **`views`**:
+  - **`activities`**: Contiene las pantallas principales de la aplicación.
+  - **`fragment`**: Contiene las vistas fragmentadas para modularizar la UI.
+    - `Comida`
+      - **`adapter`**: Contiene adaptadores para manejar la vista de los datos.
+      - **`dialog`**: Contiene elementos de diálogo.
+      - `ComidaFragment`: Fragmento principal para mostrar las comidas.
+    - `Home`: Fragmento principal de la aplicación.
+    - `Setting`: Configuraciones de la aplicación.
+  
+#### **Archivo `MyApplication`**:
+- Clase de aplicación que inicializa componentes globales.
+
+---
+
+### 📜 **Código Fuente**
+
+#### **Repositorio: ComidaRepository**
+```kotlin
+package com.example.gymactive.data.comida.repository
+
+import com.example.gymactive.data.comida.objects.ComidasData
+import com.example.gymactive.domain.Comidas.interfaces.InterfacesDAO
+import com.example.gymactive.domain.Comidas.models.Comida
+import com.example.gymactive.domain.Comidas.models.ListComida
+import javax.inject.Inject
+import javax.inject.Singleton
+
+@Singleton
+class ComidaRepository @Inject constructor():InterfacesDAO {
+
+    override suspend fun getNativeComida(): List<Comida> {
+        return ComidasData.listaComidas
+    }
+
+    override suspend fun getComidaList(): List<Comida> {
+        return ListComida.comidaObject.comidasMutableList
+    }
+
+    override suspend fun deleteComida(pos: Int): Boolean {
+        return if (pos < ListComida.comidaObject.comidasMutableList.size){
+            ListComida.comidaObject.comidasMutableList.removeAt(pos)
+            true
+        } else false
+    }
+
+    override suspend fun addComida(newComida: Comida): Comida? {
+        ListComida.comidaObject.comidasMutableList.add(newComida)
+        return newComida
+    }
+
+    override suspend fun updateComida(pos: Int, comida: Comida): Boolean {
+        return if(pos < ListComida.comidaObject.comidasMutableList.size){
+            ListComida.comidaObject.comidasMutableList[pos] = comida.copy(
+                nombre_plato = comida.nombre_plato,
+                descricion = comida.descricion,
+                image = comida.image
+            )
+            true
+        } else false
+    }
+
+    override suspend fun exisComida(comida: Comida): Boolean {
+        return ListComida.comidaObject.comidasMutableList.contains(comida)
+    }
+
+    override suspend fun getComidaById(id: Int): Comida? {
+        return ListComida.comidaObject.comidasMutableList.getOrNull(id)
+    }
+
+    override fun getComidaByPos(pos: Int): Comida? {
+        return ListComida.comidaObject.comidasMutableList.getOrNull(pos)
+    }
+}
+```
+
+### 📦 Dependencias utilizadas
+#### **`build.gradle (Project)`**
+```gradle
+plugins {
+    alias(libs.plugins.android.application) apply false
+    alias(libs.plugins.kotlin.android) apply false
+    id("com.google.gms.google-services") version "4.4.2" apply false
+    id("com.google.dagger.hilt.android") version "2.51.1" apply false
+}
+```
+
+#### **`build.gradle (App)`**
+```gradle
+plugins {
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    id("com.google.gms.google-services")
+    id("kotlin-kapt")
+    id("com.google.dagger.hilt.android")
+}
+
+// Hilt
+implementation("com.google.dagger:hilt-android:2.51.1")
+kapt("com.google.dagger:hilt-android-compiler:2.51.1")
+
+// ViewModel
+implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1")
+
+// LiveData
+implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.3.1")
+
+// Facilita mvvm en el Fragment
+implementation("androidx.fragment:fragment-ktx:1.3.2")
+
+// Facilita mvvm en el Activity
+implementation("androidx.activity:activity-ktx:1.2.2")
+```
+
+
