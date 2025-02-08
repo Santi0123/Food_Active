@@ -1,6 +1,5 @@
 package com.example.gymactive.ui.views.fragment.VistaGeneral
 
-
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,13 +11,9 @@ import com.example.gymactive.databinding.FragmentVistaGeneralBinding
 import com.example.gymactive.domain.Comidas.models.Comida
 import com.example.gymactive.ui.views.fragment.VistaGeneral.adapter.AdapterVistaGeneral
 
-
-
 class VistaGeneralFragment : Fragment(){
 
     lateinit var binding: FragmentVistaGeneralBinding
-
-
     lateinit var adapterVistaGeneral: AdapterVistaGeneral
     lateinit var listVistaGeneral: List<Comida>
 
@@ -41,7 +36,7 @@ class VistaGeneralFragment : Fragment(){
         binding.rvComidas.layoutManager = LinearLayoutManager(context)
         adapterVistaGeneral = AdapterVistaGeneral(listVistaGeneral)
         binding.rvComidas.adapter = adapterVistaGeneral
-
     }
+
 
 }
