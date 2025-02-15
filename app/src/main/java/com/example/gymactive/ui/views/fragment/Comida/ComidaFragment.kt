@@ -1,5 +1,6 @@
 package com.example.gymactive.ui.views.fragment.Comida
 
+import DialogEditarComida
 import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.content.SharedPreferences
@@ -18,9 +19,8 @@ import com.example.gymactive.domain.Comidas.models.ListComida
 import com.example.gymactive.ui.viewmodel.Comidas.ComidasViewModel
 import com.example.gymactive.ui.views.activities.Login
 import com.example.gymactive.ui.views.fragment.Comida.adapter.AdapterComida
-import com.example.gymactive.ui.views.fragment.Comida.dialog.DialogAgregarComida
 import com.example.gymactive.ui.views.fragment.Comida.dialog.DialogBorrarComida
-import com.example.gymactive.ui.views.fragment.comida.dialog.DialogEditarComida
+import com.example.gymactive.ui.views.fragment.comida.dialog.DialogAgregarComida
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
