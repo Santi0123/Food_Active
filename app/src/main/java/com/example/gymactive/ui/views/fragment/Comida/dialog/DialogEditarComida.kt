@@ -13,9 +13,11 @@ import android.view.LayoutInflater
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.DialogFragment
 import com.bumptech.glide.Glide
+import com.example.gymactive.R
 import com.example.gymactive.databinding.DialogComidaBinding
 import com.example.gymactive.domain.Comidas.models.Comida
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -50,7 +52,7 @@ class DialogEditarComida(
 
         binding.imagenPreview.setOnClickListener { mostrarOpcionesImagen() }
 
-        val dialog = MaterialAlertDialogBuilder(requireActivity())
+        val dialog = MaterialAlertDialogBuilder(requireActivity(), R.style.CustomDialogStyle) // Aplica el estilo aquí
             .setView(binding.root)
             .setTitle("Actualizar Comida")
             .setPositiveButton("Aceptar") { _, _ ->
@@ -58,9 +60,10 @@ class DialogEditarComida(
                 val nuevaDescripcion = binding.descricion.text.toString()
 
                 val comidaActualizada = Comida(
+                    comida.id,
                     nuevoNombre,
                     nuevaDescripcion,
-                    imagenBase64 ?: comida.image // Si no se ha actualizado la imagen, mantenemos la original
+                    imagenBase64 ?: comida.image
                 )
 
                 onActualizarComida(posicion, comidaActualizada)
@@ -68,8 +71,24 @@ class DialogEditarComida(
             }
             .setNegativeButton("Cancelar") { _, _ -> dismiss() }
             .create()
+            dialog.setOnShowListener {
+                val btnAceptar = dialog.getButton(Dialog.BUTTON_POSITIVE)
+                val btnCancelar = dialog.getButton(Dialog.BUTTON_NEGATIVE)
+
+                // Estilo para los botones
+                btnAceptar.apply {
+                    setBackgroundResource(R.drawable.rounded_button)  // Fondo redondeado para Aceptar
+                    setTextColor(ContextCompat.getColor(requireContext(), R.color.white))  // Color blanco para el texto
+                }
+
+                btnCancelar.apply {
+                    setBackgroundResource(R.drawable.rounded_button)  // Fondo redondeado para Cancelar
+                    setTextColor(ContextCompat.getColor(requireContext(), R.color.white))  // Color blanco para el texto
+                }
+                }
 
         return dialog
+
     }
 
 

@@ -8,17 +8,18 @@
         <item
             android:id="@+id/comidaMenu"
             android:title="Comida"
-            android:icon="@drawable/comida" />
+            android:icon="@drawable/comida"/>
 
         <item
             android:id="@+id/settingMenu"
             android:title="Configuración"
-            android:icon="@drawable/setting" />
+            android:icon="@drawable/setting"
+            />
 
         <item
             android:id="@+id/vistaGeneral"
             android:title="Lista de comida"
-            android:icon="@drawable/ojo" />
+            android:icon="@drawable/ojo"/>
     </group>
 
     <!-- Separador visual opcional -->
@@ -27,7 +28,7 @@
             <item
                 android:id="@+id/logoutMenu"
                 android:title="Cerrar sesión"
-                android:icon="@drawable/logout" />
+                android:icon="@drawable/logout"/>
         </menu>
     </item>
 

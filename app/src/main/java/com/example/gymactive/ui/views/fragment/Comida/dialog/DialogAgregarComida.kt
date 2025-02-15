@@ -14,8 +14,10 @@ import android.util.Base64
 import android.view.LayoutInflater
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.DialogFragment
+import com.example.gymactive.R
 import com.example.gymactive.databinding.DialogComidaBinding
 import com.example.gymactive.domain.Comidas.models.Comida
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -27,6 +29,7 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 
 class DialogAgregarComida(
+    val ultimaPosition: Long,
     private val comida: (Comida) -> Unit
 ) : DialogFragment() {
 
@@ -40,7 +43,7 @@ class DialogAgregarComida(
 
         binding.imagenPreview.setOnClickListener { mostrarOpcionesImagen() }
 
-        val dialog = MaterialAlertDialogBuilder(requireContext())
+        val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.CustomDialogStyle)
             .setTitle("Agregar nueva comida")
             .setMessage("Complete los siguientes campos:")
             .setView(binding.root)
@@ -50,12 +53,26 @@ class DialogAgregarComida(
 
         dialog.setOnShowListener {
             val btnAceptar = dialog.getButton(Dialog.BUTTON_POSITIVE)
+            val btnCancelar = dialog.getButton(Dialog.BUTTON_NEGATIVE)
+
+            // Estilo para los botones
+            btnAceptar.apply {
+                setBackgroundResource(R.drawable.rounded_button)  // Aplicar fondo redondeado
+                setTextColor(ContextCompat.getColor(requireContext(), R.color.white))  // Color del texto
+            }
+
+            btnCancelar.apply {
+                setBackgroundResource(R.drawable.rounded_button)  // Fondo para el botón cancelar
+                setTextColor(ContextCompat.getColor(requireContext(), R.color.white))  // Color del texto
+            }
+
             btnAceptar.setOnClickListener {
                 val nombre = binding.nombrePlato.text.toString()
                 val descripcion = binding.descricion.text.toString()
 
+                // Validación de campos
                 if (nombre.isNotEmpty() && descripcion.isNotEmpty() && isImageConverted) {
-                    val nuevaComida = Comida(nombre, descripcion, imagenBase64!!)
+                    val nuevaComida = Comida(ultimaPosition, nombre, descripcion, imagenBase64!!)
                     comida(nuevaComida)
                     dismiss()
                 } else {
@@ -65,6 +82,8 @@ class DialogAgregarComida(
         }
 
         return dialog
+
+
     }
 
     private fun createImageUri(): Uri? {

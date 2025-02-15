@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name="white2">#DEDDDD</color>
-    <!-- Colores aplicacion -->
-    <color name="fondo_de_la_aplicacion">#D7C3A5</color> <!-- Marrón pastel claro -->
+    <color name="black">#1A2B38</color> <!-- Azul muy oscuro (para textos importantes) -->
+    <color name="white">#FFFFFF</color> <!-- Blanco puro (para fondos principales) -->
+    <color name="white2">#E2E8F0</color> <!-- Gris azul claro (para fondos suaves y de soporte) -->
 
-    <color name="boton_sin_pulsar">#F4B178</color> <!-- Naranja claro con tono marrón pastel -->
+    <color name="fondo_de_la_aplicacion">#A9C1D6</color> <!-- Azul claro grisáceo (fondo principal, suave pero con más color) -->
+    <color name="boton_sin_pulsar">#7A8D9C</color> <!-- Azul grisáceo medio (para botones inactivos) -->
+    <color name="boton_pulsado">#3B4A58</color> <!-- Azul oscuro saturado (para botones pulsados, contraste más fuerte) -->
 
-    <color name="boton_pulsado">#E68A2D</color> <!-- Marrón más oscuro para botones pulsados -->
+    <color name="color_texto_gris">#4B5B6C</color> <!-- Gris azulado medio para el texto principal -->
+    <color name="colorNormal">#2C3E50</color> <!-- Azul oscuro para cardview, bordes y contenedores -->
+    <color name="colorOnPressed">#2D3A47</color> <!-- Azul más oscuro para el estado presionado de botones y tarjetas -->
 
-    <color name="color_texto_gris">#B9B59A</color> <!-- Gris cálido claro -->
+    <color name="color_caja">#A7BCC7</color> <!-- Azul grisáceo suave para cajas y contenedores (más luz para contraste) -->
+    <color name="boton_borrar">#F15656</color> <!-- Rojo más saturado para una advertencia fuerte (botón de borrar) -->
+    <color name="boton_agragar">#50A36B</color> <!-- Verde más brillante para el botón de agregar (resalta sin chocar) -->
+    <color name="boton_editar">#7F9BA6</color> <!-- Azul grisáceo claro para editar, manteniendo el contraste sin saturación -->
+    <color name="navegation">#3D4F60</color> <!-- Azul más oscuro y profundo para la barra de navegación -->
 
-    <color name="colorNormal">#8D7B5A</color> <!-- Marrón suave para cardview -->
-    <color name="colorOnPressed">#A88F6F</color> <!-- Marrón más suave para el estado presionado -->
-    <color name="color_caja">#C0A97D</color> <!-- Marrón claro con tonalidad amarilla para la caja -->
+    <color name="colorSurface">#F6F9FC</color> <!-- Blanco muy suave (superficies limpias y aireadas) -->
+    <color name="colorOnSurface">#1F2A38</color> <!-- Azul oscuro para texto sobre superficies claras -->
+    <color name="color_dialog_title_text">#2A3A48</color> <!-- Azul oscuro con un toque grisáceo para el título del diálogo -->
+    <color name="color_dialog_button">#3A4A5A</color> <!-- Azul grisáceo medio para los botones del diálogo -->
 
-    <color name="boton_borrar">#E57373</color> <!-- Rojo terracota suave -->
-    <color name="boton_agragar">#A8D08D</color> <!-- Verde suave -->
-    <color name="boton_editar">#A388B6</color>
-    <color name="navegation">#A0A665</color>
-
-    <color name="colorSurface">#FFFFFFFF</color>
-    <color name="colorOnSurface">#FFFFFFFF</color>
-    <color name="color_dialog_title_text">#004656</color>
-    <color name="color_dialog_button">#004656</color>
+    <color name="color_selected_item">#3D4F60</color> <!-- Azul seleccionado -->
+    <color name="color_default_item">#A9C1D6</color> <!-- Color predeterminado -->
 
 
 </resources>

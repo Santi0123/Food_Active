@@ -67,25 +67,26 @@ class ComidaFragment : Fragment() {
         comidaViewModel.newComidaLiveData.observe(viewLifecycleOwner, { newComida ->
             newComida?.let {
                 adapterComida.listaComidas = ListComida.comidaObject.comidasMutableList.toMutableList()
-                adapterComida.notifyItemInserted(adapterComida.listaComidas.size -1)
-                layoutManager.scrollToPosition(adapterComida.listaComidas.size -1)
+                adapterComida.notifyItemInserted(adapterComida.listaComidas.lastIndex)
+                layoutManager.scrollToPosition(adapterComida.listaComidas.lastIndex)
             }
         })
         comidaViewModel.posDeleteComidaLiveData.observe(viewLifecycleOwner, { posDel ->
             adapterComida.listaComidas = ListComida.comidaObject.comidasMutableList
             adapterComida.notifyItemRemoved(posDel)
-            layoutManager.scrollToPosition(adapterComida.listaComidas.size -1)
+            layoutManager.scrollToPositionWithOffset(posDel,adapterComida.listaComidas.lastIndex)
         })
         comidaViewModel.posUpdateComidaLiveData.observe(viewLifecycleOwner, { posUpdate ->
             adapterComida.listaComidas = ListComida.comidaObject.comidasMutableList
             adapterComida.notifyItemChanged(posUpdate)
-            layoutManager.scrollToPosition(adapterComida.listaComidas.size -1)
+            layoutManager.scrollToPositionWithOffset(posUpdate,adapterComida.listaComidas.lastIndex)
         })
     }
 
     private fun btnAddOnClickListener() {
         binding.btnAgregar.setOnClickListener {
-            val dialog = DialogAgregarComida(){
+            val ultimaPosition = ListComida.comidaObject.getLastPos().toLong()
+            val dialog = DialogAgregarComida(ultimaPosition){
                 comida -> comidaViewModel.addComida(comida)
             }
             dialog.show(requireActivity().supportFragmentManager, "Agrego comida")

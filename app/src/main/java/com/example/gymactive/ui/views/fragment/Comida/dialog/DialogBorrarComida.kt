@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Base64
 import android.view.LayoutInflater
 import android.widget.ImageView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import com.bumptech.glide.Glide
 import com.example.gymactive.R
@@ -29,8 +30,7 @@ class DialogBorrarComida(
         setValuesDialog(binding)
 
         // Creación del diálogo con MaterialAlertDialog
-        val dialog = MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Eliminar comida")
+        val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.CustomDialogStyle)
             .setView(binding.root)
             .setMessage("¿Seguro que quieres eliminar la comida \"${comida.nombre_plato}\"?")
             .setPositiveButton("Eliminar") { _, _ ->
@@ -40,6 +40,31 @@ class DialogBorrarComida(
             }
             .setNegativeButton("Cancelar") { _, _ -> dismiss() }
             .create()
+            dialog.setOnShowListener {
+                val btnAceptar = dialog.getButton(Dialog.BUTTON_POSITIVE)
+                val btnCancelar = dialog.getButton(Dialog.BUTTON_NEGATIVE)
+
+                // Estilo para los botones
+                btnAceptar.apply {
+                    setBackgroundResource(R.drawable.rounded_button)  // Fondo redondeado para Aceptar
+                    setTextColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.white
+                        )
+                    )  // Color blanco para el texto
+                }
+
+                btnCancelar.apply {
+                    setBackgroundResource(R.drawable.rounded_button)  // Fondo redondeado para Cancelar
+                    setTextColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.white
+                        )
+                    )  // Color blanco para el texto
+                }
+            }
 
         return dialog
     }

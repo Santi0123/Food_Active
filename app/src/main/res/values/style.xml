@@ -1,0 +1,27 @@
+<resources>
+    <!-- Estilo para MaterialAlertDialog -->
+    <style name="CustomDialogStyle" parent="Theme.MaterialComponents.DayNight.Dialog.Alert">
+        <!-- Título del diálogo -->
+        <item name="android:textColorPrimary">@color/fondo_de_la_aplicacion</item> <!-- Título en negro -->
+
+        <!-- Fondo del diálogo -->
+        <item name="android:background">@color/color_dialog_button</item> <!-- Color de fondo personalizado -->
+
+        <!-- Fondo de los botones -->
+        <item name="colorButtonNormal">@color/color_dialog_button</item>
+
+        <!-- Contenido del diálogo (texto) -->
+        <item name="android:textColorPrimaryInverse">@android:color/black</item> <!-- Texto en negro -->
+
+        <!-- Borde del diálogo -->
+        <item name="android:windowBackground">@color/fondo_de_la_aplicacion</item> <!-- Fondo de la ventana del diálogo -->
+
+        <!-- Color del foco en el diálogo -->
+        <item name="android:focusable">true</item>
+
+        <!-- Modificar bordes de los botones -->
+        <item name="colorControlNormal">@color/color_dialog_button</item>
+        <item name="colorControlActivated">@color/boton_agragar</item> <!-- Para el color del botón cuando está presionado -->
+
+    </style>
+</resources>
