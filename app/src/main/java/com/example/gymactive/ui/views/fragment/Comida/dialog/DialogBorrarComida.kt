@@ -1,10 +1,14 @@
 package com.example.gymactive.ui.views.fragment.Comida.dialog
 
 import android.app.Dialog
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
+import android.util.Base64
 import android.view.LayoutInflater
+import android.widget.ImageView
 import androidx.fragment.app.DialogFragment
+import com.bumptech.glide.Glide
 import com.example.gymactive.R
 import com.example.gymactive.databinding.BorrarComidaDialogBinding
 import com.example.gymactive.domain.Comidas.models.Comida
@@ -51,13 +55,26 @@ class DialogBorrarComida(
             isEnabled = false  // Deshabilitar edición
         }
 
-        // Establecer la imagen si existe
-        val imageUri = comida.image?.let { Uri.parse(it) }
-        if (!imageUri.toString().isNullOrEmpty()) {
-            binding.imagenPreview.setImageURI(imageUri)
-        } else {
-            binding.imagenPreview.setImageResource(R.drawable.galeria)
-        }
+        loadImage(comida.image)
+
+    }
+
+    private fun loadImage(image:String) {
+        Glide.with(this)
+            .let {
+                when {
+                    image.startsWith("http") -> it.load(image) // URL remota
+                    image.startsWith("content://") -> it.load(image) // Uri local
+                    image.length > 100 -> { // Base64 (suelen ser largas)
+                        val decodedBytes = Base64.decode(image, Base64.DEFAULT)
+                        val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
+                        it.load(bitmap)
+                    }
+                    else -> it.load(image.toIntOrNull() ?: 0) // Recurso local
+                }
+            }
+            .centerCrop()
+            .into(binding.imagenPreview)
     }
 
     override fun onDestroyView() {
