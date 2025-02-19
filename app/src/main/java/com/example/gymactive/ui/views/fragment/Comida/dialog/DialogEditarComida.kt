@@ -10,7 +10,6 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.util.Base64
 import android.view.LayoutInflater
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
@@ -45,7 +44,7 @@ class DialogEditarComida(
 
         // Rellenamos los campos del formulario con los datos actuales de la comida
         binding.nombrePlato.setText(comida.nombre_plato ?: "Sin nombre")
-        binding.descricion.setText(comida.descricion ?: "Sin descripción")
+        binding.descricion.setText(comida.descripcion ?: "Sin descripción")
 
 
         loadImage(comida.image)

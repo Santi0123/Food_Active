@@ -86,7 +86,7 @@ class ComidaFragment : Fragment() {
     private fun btnAddOnClickListener() {
         binding.btnAgregar.setOnClickListener {
             val ultimaPosition = ListComida.comidaObject.getLastPos().toLong()
-            val dialog = DialogAgregarComida(ultimaPosition){
+            val dialog = DialogAgregarComida(ultimaPosition.toInt()){
                 comida -> comidaViewModel.addComida(comida)
             }
             dialog.show(requireActivity().supportFragmentManager, "Agrego comida")

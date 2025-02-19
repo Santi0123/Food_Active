@@ -39,7 +39,7 @@ class ComidaRepository @Inject constructor():InterfacesDAO {
         return if(pos < ListComida.comidaObject.comidasMutableList.size){
             ListComida.comidaObject.comidasMutableList[pos] = ListComida.comidaObject.comidasMutableList.get(pos).copy(
                 nombre_plato = comida.nombre_plato,
-                descricion = comida.descricion,
+                descripcion = comida.descripcion,
                 image = comida.image
             )
             true

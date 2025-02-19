@@ -29,7 +29,7 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 
 class DialogAgregarComida(
-    val ultimaPosition: Long,
+    val ultimaPosition: Int,
     private val comida: (Comida) -> Unit
 ) : DialogFragment() {
 

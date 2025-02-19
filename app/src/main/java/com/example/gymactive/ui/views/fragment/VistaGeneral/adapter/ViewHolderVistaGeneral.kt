@@ -13,7 +13,7 @@ class ViewHolderVistaGeneral(
     fun render(comida: Comida) {
         // Asignar nombre y descripción
         binding.tvComidaName.text = comida.nombre_plato
-        binding.tvComidaDescripcion.text = comida.descricion
+        binding.tvComidaDescripcion.text = comida.descripcion
 
         // Cargar imagen con Glide
         val image = comida.image

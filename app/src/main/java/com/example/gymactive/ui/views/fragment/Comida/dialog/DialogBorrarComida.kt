@@ -2,11 +2,9 @@ package com.example.gymactive.ui.views.fragment.Comida.dialog
 
 import android.app.Dialog
 import android.graphics.BitmapFactory
-import android.net.Uri
 import android.os.Bundle
 import android.util.Base64
 import android.view.LayoutInflater
-import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import com.bumptech.glide.Glide
@@ -76,7 +74,7 @@ class DialogBorrarComida(
             isEnabled = false  // Deshabilitar edición
         }
         binding.descricion.apply {
-            setText(comida.descricion ?: "Sin descripción")
+            setText(comida.descripcion ?: "Sin descripción")
             isEnabled = false  // Deshabilitar edición
         }
 
