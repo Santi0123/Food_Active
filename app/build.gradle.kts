@@ -70,7 +70,10 @@ dependencies {
     // Facilita mvvm en el Activity
     implementation("androidx.activity:activity-ktx:1.2.2")
 
-
+    //retrofit2
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    //Convertirá nuestro Gson a data class. Tendrá anotaciones de Serialización.
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
 
     implementation("com.github.bumptech.glide:glide:4.15.1")
     implementation(libs.androidx.activity)
