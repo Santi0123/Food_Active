@@ -1,31 +1,82 @@
 package com.example.gymactive.ui.views.activities
 
+import com.example.gymactive.ui.viewmodel.usuario.UsuarioViewModel
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.gymactive.databinding.FragmentRegistrarseBinding
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
-import com.google.firebase.auth.FirebaseAuthUserCollisionException
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException
+import com.example.gymactive.domain.usuario.models.UsuarioModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class Registrarse : AppCompatActivity() {
 
     private lateinit var binding: FragmentRegistrarseBinding
-    private lateinit var authentication: FirebaseAuth
+    val usuarioViewModel: UsuarioViewModel by viewModels()
+    lateinit var shared: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+
+        shared = getSharedPreferences("session_prefs",Context.MODE_PRIVATE)
         binding = FragmentRegistrarseBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setObserver()
 
-        authentication = FirebaseAuth.getInstance()
+        initLisenert()
 
+
+    }
+
+    private fun setObserver(){
+        usuarioViewModel.registerLiveData.observe(this){ usuario->
+            if (usuario != null){
+                savePreference(usuario)
+                Toast.makeText(this,"Registro con exito",Toast.LENGTH_SHORT).show()
+                cleanBox()
+                startActivity(Intent(this,Login::class.java))
+                finish()
+            }else{
+                resetShared()
+                Toast.makeText(this,"Comprebe su correo",Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun savePreference(usuario: UsuarioModel) {
+        with(shared.edit()){
+            putString("email",usuario.email)
+            putString("nombre",usuario.nombre)
+            putBoolean("is_logged_in",true)
+            apply()
+        }
+    }
+
+    private fun cleanBox(){
+        binding.textEmail.text?.clear()
+        binding.textPassword.text?.clear()
+    }
+
+    private fun resetShared(){
+        with(shared.edit()){
+            putString("email","")
+            putString("nombre","")
+            putBoolean("is_logged_in",false)
+            apply()
+        }
+    }
+
+    private  fun initLisenert(){
         binding.aceptarBoton.setOnClickListener {
-            val email = binding.textModNombre.editText?.text.toString()
-            val password = binding.textModPassword.editText?.text.toString()
-            val repeatPassword = binding.confirmarContrasenna.editText?.text.toString()
+            val email = binding.textEmail.text.toString()
+            val password = binding.textPassword.text.toString()
+            val repeatPassword = binding.confirmarContrasenna.text.toString()
             val privacyAccepted = binding.checkBox.isChecked
 
             if (!privacyAccepted) {
@@ -38,43 +89,10 @@ class Registrarse : AppCompatActivity() {
             } else if (password != repeatPassword) {
                 Toast.makeText(this, "Las contraseñas no coinciden", Toast.LENGTH_LONG).show()
             } else {
-                registerUser(email, password)
+                usuarioViewModel.register(email, password)
             }
         }
     }
 
-    private fun registerUser(email: String, password: String) {
-        authentication.createUserWithEmailAndPassword(email, password).addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                val user = authentication.currentUser
-                user?.sendEmailVerification()?.addOnCompleteListener { emailTask ->
-                    if (emailTask.isSuccessful) {
-                        Toast.makeText(this, "Registro exitoso. Verifique su correo electrónico.", Toast.LENGTH_LONG).show()
-                        authentication.signOut()
-                        val intent = Intent(this, Login::class.java)
-                        startActivity(intent)
-                        finish()
-                    } else {
-                        Toast.makeText(this, "Registro exitoso, pero fallo al enviar verificación: ${emailTask.exception?.message}", Toast.LENGTH_LONG).show()
-                    }
-                }
-            } else {
-                handleRegistrationError(task.exception)
-            }
-        }
-    }
 
-    private fun handleRegistrationError(exception: Exception?) {
-        try {
-            throw exception ?: Exception("Error desconocido")
-        } catch (e: FirebaseAuthUserCollisionException) {
-            Toast.makeText(this, "El usuario ya existe", Toast.LENGTH_LONG).show()
-        } catch (e: FirebaseAuthWeakPasswordException) {
-            Toast.makeText(this, "La contraseña es demasiado débil: ${e.reason}", Toast.LENGTH_LONG).show()
-        } catch (e: FirebaseAuthInvalidCredentialsException) {
-            Toast.makeText(this, "El email proporcionado no es válido", Toast.LENGTH_LONG).show()
-        } catch (e: Exception) {
-            Toast.makeText(this, "Error: ${e.message}", Toast.LENGTH_LONG).show()
-        }
-    }
 }

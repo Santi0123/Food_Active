@@ -1,108 +1,117 @@
 package com.example.gymactive.ui.views.activities
 
+import com.example.gymactive.ui.viewmodel.usuario.UsuarioViewModel
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.example.gymactive.databinding.ActivityLoginBinding
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
-import com.google.firebase.auth.FirebaseAuthInvalidUserException
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import com.example.gymactive.domain.usuario.models.UsuarioModel
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class Login : AppCompatActivity() {
 
     private lateinit var loginBinding: ActivityLoginBinding
-    private lateinit var auth: FirebaseAuth
+    val usuarioViewModel: UsuarioViewModel by viewModels()
+    lateinit var shared: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        loginBinding = ActivityLoginBinding.inflate(layoutInflater)
-        setContentView(loginBinding.root)
         enableEdgeToEdge()
 
-        auth = Firebase.auth
+        shared = getSharedPreferences("session_prefs", Context.MODE_PRIVATE)
+        loginBinding = ActivityLoginBinding.inflate(layoutInflater)
+        setContentView(loginBinding.root)
+        setObserver()
 
-        initUI()
-    }
-
-    private fun initUI() {
-        loginBinding.aceptarBoton.setOnClickListener { startLogin() }
-        loginBinding.registrarse.setOnClickListener { openRegisterActivity() }
-        loginBinding.recordarContrasenna.setOnClickListener { recoverPassword() }
-    }
-
-    private fun openRegisterActivity() {
-        val intent = Intent(this, Registrarse::class.java)
-        startActivity(intent)
-    }
-
-    private fun startLogin() {
-        val email = loginBinding.textModNombre.editText?.text.toString()
-        val password = loginBinding.textModPassword.editText?.text.toString()
-
-        if (email.isEmpty() || password.isEmpty()) {
-            Toast.makeText(this, "Por favor, ingrese email y contraseña", Toast.LENGTH_SHORT).show()
-            return
+        if (isLoggedIn()) {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        } else {
+            initListener()
         }
+    }
 
-        auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                val user = auth.currentUser
-                if (user?.isEmailVerified == true) {
-                    val sharedPreferences = getSharedPreferences("session_prefs", MODE_PRIVATE)
-                    val editor = sharedPreferences.edit()
-                    editor.putBoolean("is_logged_in", true)
-                    editor.apply()
-
-                    val intent = Intent(this, MainActivity::class.java)
-                    startActivity(intent)
-                    finish()
-                    Toast.makeText(this, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show()
-                } else {
-                    auth.signOut()
-                    Toast.makeText(this, "Por favor, verifique su correo electrónico", Toast.LENGTH_SHORT).show()
-                }
-            } else {
-                var message = "Error desconocido"
-                try {
-                    throw task.exception ?: Exception("Error desconocido")
-                } catch (e: FirebaseAuthInvalidUserException) {
-                    message = "El usuario no existe o ha sido deshabilitado"
-                } catch (e: FirebaseAuthInvalidCredentialsException) {
-                    message = "Contraseña incorrecta"
-                } catch (e: Exception) {
-                    message = e.message.toString()
-                }
-                Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    private fun setObserver(){
+        usuarioViewModel.loginLiveData.observe(this){ usuario->
+            if (usuario != null){
+                savePreference(usuario)
+                Toast.makeText(this,"login con exito",Toast.LENGTH_SHORT).show()
+                cleanBox()
+                startActivity(Intent(this,MainActivity::class.java))
+                finish()
+            }else{
+                resetShared()
+                Toast.makeText(this,"Comprebe su correo",Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    private fun recoverPassword() {
-        val email = loginBinding.textModNombre.editText?.text.toString()
-
-        if (email.isEmpty()) {
-            Toast.makeText(this, "Por favor, ingrese su email", Toast.LENGTH_SHORT).show()
-            return
+    private fun savePreference(usuario: UsuarioModel) {
+        with(shared.edit()){
+            putString("email",usuario.email)
+            putString("nombre",usuario.nombre)
+            putBoolean("is_logged_in",true)
+            apply()
         }
+    }
 
-        auth.sendPasswordResetEmail(email).addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                Toast.makeText(this, "Email de recuperación enviado", Toast.LENGTH_SHORT).show()
-            } else {
-                var message = "Error desconocido"
-                try {
-                    throw task.exception ?: Exception("Error desconocido")
-                } catch (e: FirebaseAuthInvalidCredentialsException) {
-                    message = "Formato de email incorrecto"
-                } catch (e: Exception) {
-                    message = e.message.toString()
+    private fun resetShared(){
+        with(shared.edit()){
+            putString("email","")
+            putString("nombre","")
+            putBoolean("is_logged_in",false)
+            apply()
+        }
+    }
+
+    private fun cleanBox(){
+        loginBinding.textEmail.text?.clear()
+        loginBinding.textPassword.text?.clear()
+    }
+
+    private fun isLoggedIn(): Boolean {
+        return shared.getBoolean("is_logged_in", false)
+    }
+
+    private fun initListener(){
+        loginBinding.aceptarBoton.setOnClickListener {
+
+            val email = loginBinding.textEmail.text.toString().trim()
+            val password = loginBinding.textPassword.text.toString().trim()
+
+            if(email.isEmpty()|| password.isEmpty()){
+                Toast.makeText(this,"Todos los campos deben de estar rellenos",
+                    Toast.LENGTH_SHORT).show()
+            } else{
+                lifecycleScope.launch {
+                    usuarioViewModel.login(email,password)
                 }
-                Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
             }
         }
+
+        loginBinding.sinRecordar.setOnClickListener{
+            resertPassword()
+        }
+
+        loginBinding.registrarse.setOnClickListener {
+            cleanBox()
+            startActivity(Intent(this,Registrarse::class.java))
+            finish()
+        }
+    }
+
+
+
+    private fun resertPassword(){
+        Toast.makeText(this,"Contacte con el admin",Toast.LENGTH_SHORT).show()
     }
 }

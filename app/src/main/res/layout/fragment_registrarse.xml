@@ -40,6 +40,7 @@
             android:textColorHint="@color/black">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/text_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white2"
@@ -56,6 +57,7 @@
             app:endIconMode="password_toggle">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/text_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white2"
@@ -66,13 +68,13 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/confirmar_contrasenna"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColorHint="@color/black"
             app:endIconMode="password_toggle">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/confirmar_contrasenna"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white2"

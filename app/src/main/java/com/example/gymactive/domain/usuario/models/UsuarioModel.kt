@@ -1,5 +1,6 @@
 package com.example.gymactive.domain.usuario.models
 
+
 class UsuarioModel(
     val id:Int?=null,
     val email:String?=null,

@@ -1,14 +1,18 @@
+package com.example.gymactive.ui.viewmodel.usuario
+
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gymactive.domain.usuario.models.UsuarioModel
 import com.example.gymactive.domain.usuario.usecase.network.LoginUseCase
 import com.example.gymactive.domain.usuario.usecase.network.RegisterUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
+@HiltViewModel
 class UsuarioViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
     private val registerUseCase: RegisterUseCase
@@ -27,15 +31,17 @@ class UsuarioViewModel @Inject constructor(
                 usuarioLogeado = loginUseCase(email, password)
             }
             withContext(Dispatchers.Main){
-                usuarioLiveData.value = usuarioLogeado
+                loginLiveData.value = usuarioLogeado
             }
         }
     }
 
-    fun register(usuario: UsuarioModel) {
+    fun register(email: String,password: String) {
         viewModelScope.launch(Dispatchers.IO) {
             var usuarioRegistrado: UsuarioModel?= null
-            usuarioRegistrado = registerUseCase(usuario)
+            if(email.isNotEmpty() && password.isNotEmpty()){
+                usuarioRegistrado = registerUseCase(email, password)
+            }
             withContext(Dispatchers.Main) {
                 registerLiveData.value = usuarioRegistrado
             }

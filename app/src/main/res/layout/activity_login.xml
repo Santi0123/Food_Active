@@ -45,6 +45,7 @@
             android:textColorHint="@color/black">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/text_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Nombre:"
@@ -70,6 +71,7 @@
             app:boxBackgroundMode="outline">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/text_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Contraseña:"

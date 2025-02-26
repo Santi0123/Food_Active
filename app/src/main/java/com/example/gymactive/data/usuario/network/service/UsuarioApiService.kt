@@ -6,22 +6,24 @@ import com.example.gymactive.data.usuario.network.models.response.ResponseLogin
 import com.example.gymactive.data.usuario.network.models.response.ResponseRegister
 import javax.inject.Inject
 
-class UsuarioApiService @Inject constructor(val apiService: UsuarioApiServiceInterface) {
+class UsuarioApiService @Inject constructor(private val apiService: UsuarioApiServiceInterface) {
 
     suspend fun login(usuario: RequestLogin): Result<ResponseLogin> {
         return try {
-            val respone = apiService.login(usuario)
-            if (respone.isSuccessful) {
-                return respone.body()?.let {
+            val response = apiService.login(usuario)  // Cambié 'respone' a 'response'
+            if (response.isSuccessful) {
+                response.body()?.let {
                     Result.success(it)
                 } ?: Result.failure(RuntimeException("Response body is null"))
             } else {
-                Result.failure(RuntimeException("Response body is null"))
+                val errorMessage = response.errorBody()?.string() ?: "Error desconocido"
+                Result.failure(RuntimeException("Error en el login: $errorMessage"))
             }
         } catch (e: Exception) {
             Result.failure(e)
         }
     }
+
 
     suspend fun register(usuario: RequestRegister): Result<ResponseRegister> {
         return try {

@@ -12,6 +12,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
+        android:networkSecurityConfig="@xml/network_security_config"
         android:allowBackup="true"
         android:name=".MyApplication"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -27,10 +28,10 @@
             android:name=".ui.views.activities.Registrarse"
             android:exported="false" />
         <activity
-            android:name=".ui.views.activities.Login"
+            android:name=".ui.views.activities.MainActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.views.activities.MainActivity"
+            android:name=".ui.views.activities.Login"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

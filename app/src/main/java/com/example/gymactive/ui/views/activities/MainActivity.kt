@@ -173,10 +173,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun logout() {
-        FirebaseAuth.getInstance().signOut()
-
         getSharedPreferences("session_prefs", MODE_PRIVATE)
             .edit()
+            .putString("email","")
+            .putString("nombre","")
             .putBoolean("is_logged_in",false)
             .apply()
         navController.popBackStack(R.id.vistaGeneral,false)
