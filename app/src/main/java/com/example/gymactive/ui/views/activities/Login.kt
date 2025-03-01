@@ -57,6 +57,7 @@ class Login : AppCompatActivity() {
 
     private fun savePreference(usuario: UsuarioModel) {
         with(shared.edit()){
+            putInt("userId",usuario.id!!)
             putString("email",usuario.email)
             putString("nombre",usuario.nombre)
             putBoolean("is_logged_in",true)
@@ -66,6 +67,7 @@ class Login : AppCompatActivity() {
 
     private fun resetShared(){
         with(shared.edit()){
+            putInt("userId", -1)
             putString("email","")
             putString("nombre","")
             putBoolean("is_logged_in",false)

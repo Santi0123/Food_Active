@@ -5,10 +5,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gymactive.databinding.CardComidaBinding
 import com.example.gymactive.domain.Comidas.models.Comida
+import com.example.gymactive.domain.Comidas.models.ComidaModel
 
 
 class AdapterVistaGeneral(
-    private var listaComidas: List<Comida>,
+    var listaComidas: List<ComidaModel>,
 
     ) : RecyclerView.Adapter<ViewHolderVistaGeneral>() {
 

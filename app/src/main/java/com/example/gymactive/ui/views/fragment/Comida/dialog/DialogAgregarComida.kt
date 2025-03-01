@@ -19,7 +19,7 @@ import androidx.core.content.FileProvider
 import androidx.fragment.app.DialogFragment
 import com.example.gymactive.R
 import com.example.gymactive.databinding.DialogComidaBinding
-import com.example.gymactive.domain.Comidas.models.Comida
+import com.example.gymactive.domain.Comidas.models.ComidaModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -29,8 +29,8 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 
 class DialogAgregarComida(
-    val ultimaPosition: Int,
-    private val comida: (Comida) -> Unit
+    private val userId:Int,
+    private val comida: (ComidaModel) -> Unit
 ) : DialogFragment() {
 
     private lateinit var binding: DialogComidaBinding
@@ -71,8 +71,9 @@ class DialogAgregarComida(
                 val descripcion = binding.descricion.text.toString()
 
                 // Validación de campos
-                if (nombre.isNotEmpty() && descripcion.isNotEmpty() && isImageConverted) {
-                    val nuevaComida = Comida(ultimaPosition, nombre, descripcion, imagenBase64!!)
+                if (nombre.isNotEmpty() && descripcion.isNotEmpty() /*&& isImageConverted*/) {
+                    val nuevaComida =
+                        ComidaModel(null,userId, nombre, descripcion, imagenBase64)
                     comida(nuevaComida)
                     dismiss()
                 } else {
@@ -82,7 +83,6 @@ class DialogAgregarComida(
         }
 
         return dialog
-
 
     }
 

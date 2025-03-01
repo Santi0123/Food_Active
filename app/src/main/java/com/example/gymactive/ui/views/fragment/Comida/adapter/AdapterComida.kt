@@ -5,11 +5,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gymactive.databinding.ItemComidaBinding
 import com.example.gymactive.domain.Comidas.models.Comida
+import com.example.gymactive.domain.Comidas.models.ComidaModel
 
 class AdapterComida(
-    var listaComidas: MutableList<Comida>,
-    val editarComida: (Int) -> Unit,
-    val borrarComida: (Int) -> Unit,
+    var listaComidas: MutableList<ComidaModel>,
+    var editarComida: (ComidaModel) -> Unit,
+    var borrarComida: (ComidaModel) -> Unit,
 ) : RecyclerView.Adapter<ViewHolderComida>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderComida {

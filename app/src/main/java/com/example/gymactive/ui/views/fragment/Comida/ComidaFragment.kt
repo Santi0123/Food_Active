@@ -8,22 +8,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.gymactive.R
 import com.example.gymactive.databinding.FragmentComidaBinding
-import com.example.gymactive.domain.Comidas.models.Comida
+import com.example.gymactive.domain.Comidas.models.ComidaModel
 import com.example.gymactive.domain.Comidas.models.ListComida
 import com.example.gymactive.ui.viewmodel.Comidas.ComidasViewModel
 import com.example.gymactive.ui.views.activities.Login
 import com.example.gymactive.ui.views.fragment.Comida.adapter.AdapterComida
 import com.example.gymactive.ui.views.fragment.Comida.dialog.DialogBorrarComida
 import com.example.gymactive.ui.views.fragment.comida.dialog.DialogAgregarComida
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -33,8 +28,8 @@ class ComidaFragment : Fragment() {
     private val comidaViewModel: ComidasViewModel by viewModels()
     private lateinit var layoutManager: LinearLayoutManager
     private lateinit var adapterComida: AdapterComida
-    private lateinit var auth: FirebaseAuth
     private lateinit var sharedPreferences: SharedPreferences
+    var userId : Int = -1
 
 
 
@@ -43,6 +38,7 @@ class ComidaFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        sharedPreferences = requireContext().getSharedPreferences("session_prefs", MODE_PRIVATE)
         binding = FragmentComidaBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -50,73 +46,83 @@ class ComidaFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        autenticacion()
+
         binding.rvComida.layoutManager = LinearLayoutManager(activity)
-        comidaViewModel.showComidas()
-        setAdapter(ListComida.comidaObject.comidasMutableList.toMutableList())
+        setAdapter()
         setObserver()
         btnAddOnClickListener()
         setScrollWithOffsetLinearLayout()
-        autenticacion()
+
+        val userId = sharedPreferences.getInt("userId",-1)
+        comidaViewModel.showComidas(userId)
+    }
+
+    private fun setAdapter() {
+        adapterComida = AdapterComida(
+            listaComidas = emptyList<ComidaModel>().toMutableList(),
+            {comida-> updateComida(comida)},
+            {comida-> delComida(comida)}
+        )
+        this.binding.rvComida.adapter = adapterComida
     }
 
     private fun setObserver() {
         comidaViewModel.comidasLiveData.observe(viewLifecycleOwner, { comidas ->
-            adapterComida.listaComidas = comidas.toMutableList()
+            if (comidas != null){
+                adapterComida.listaComidas = comidas.toMutableList()
+            }
             adapterComida.notifyDataSetChanged()
         })
         comidaViewModel.newComidaLiveData.observe(viewLifecycleOwner, { newComida ->
             newComida?.let {
-                adapterComida.listaComidas = ListComida.comidaObject.comidasMutableList.toMutableList()
+                adapterComida.listaComidas.add(it)
                 adapterComida.notifyItemInserted(adapterComida.listaComidas.lastIndex)
                 layoutManager.scrollToPosition(adapterComida.listaComidas.lastIndex)
             }
         })
-        comidaViewModel.posDeleteComidaLiveData.observe(viewLifecycleOwner, { posDel ->
-            adapterComida.listaComidas = ListComida.comidaObject.comidasMutableList
-            adapterComida.notifyItemRemoved(posDel)
-            layoutManager.scrollToPositionWithOffset(posDel,adapterComida.listaComidas.lastIndex)
+        comidaViewModel.posDeleteComidaLiveData.observe(viewLifecycleOwner, { comidaDeleted ->
+           // Verificar si la posición es válida
+            val index = adapterComida.listaComidas.indexOfFirst { it.id == comidaDeleted?.id  }
+            if (index != -1) {
+                adapterComida.listaComidas.removeAt(index)
+                adapterComida.notifyItemRemoved(index)
+                layoutManager.scrollToPositionWithOffset(index, adapterComida.listaComidas.size)
+            }
         })
-        comidaViewModel.posUpdateComidaLiveData.observe(viewLifecycleOwner, { posUpdate ->
-            adapterComida.listaComidas = ListComida.comidaObject.comidasMutableList
-            adapterComida.notifyItemChanged(posUpdate)
-            layoutManager.scrollToPositionWithOffset(posUpdate,adapterComida.listaComidas.lastIndex)
+        comidaViewModel.posUpdateComidaLiveData.observe(viewLifecycleOwner, { comidaUpdate  ->
+
+            val index = adapterComida.listaComidas.indexOfFirst { it.id == comidaUpdate?.id }
+            if (index != -1) {
+                adapterComida.listaComidas[index] = comidaUpdate!!
+                adapterComida.notifyItemChanged(index)
+                layoutManager.scrollToPositionWithOffset(index, adapterComida.listaComidas.size)
+            }
         })
     }
 
     private fun btnAddOnClickListener() {
         binding.btnAgregar.setOnClickListener {
-            val ultimaPosition = ListComida.comidaObject.getLastPos().toLong()
-            val dialog = DialogAgregarComida(ultimaPosition.toInt()){
+            val dialog = DialogAgregarComida(userId){
                 comida -> comidaViewModel.addComida(comida)
             }
             dialog.show(requireActivity().supportFragmentManager, "Agrego comida")
         }
     }
 
-    private fun setAdapter(listaComida: MutableList<Comida>) {
-        adapterComida = AdapterComida(
-            listaComida,
-            {pos->updateComida(pos)},
-            {pos->delComida(pos)}
-        )
-        this.binding.rvComida.adapter = adapterComida
-    }
-
-    private fun delComida(pos: Int) {
-        val comida = ListComida.comidaObject.comidasMutableList[pos]
+    private fun delComida (comidaModel: ComidaModel) {
         val dialog =
-            DialogBorrarComida(pos,comida){
-                pos-> comidaViewModel.deleteComida(pos)
+            DialogBorrarComida(comidaModel){
+                comida-> comidaViewModel.deleteComida(comida)
             }
         dialog.show(requireActivity().supportFragmentManager,"Se ha borrado exitosamente")
     }
 
-    private fun updateComida(pos: Int) {
-        val comida = ListComida.comidaObject.comidasMutableList[pos]
+    private fun updateComida(comidaModel: ComidaModel) {
 
         val dialog =
-            DialogEditarComida(pos,comida){
-                pos, comida ->  comidaViewModel.updateComida(pos,comida)
+            DialogEditarComida(comidaModel){
+                 comida ->  comidaViewModel.updateComida(comida)
             }
         dialog.show(requireActivity().supportFragmentManager,"Editado correctamente")
     }
@@ -127,25 +133,29 @@ class ComidaFragment : Fragment() {
         }
     }
 
+
     private fun autenticacion() {
-        auth = Firebase.auth
-        sharedPreferences = requireContext().getSharedPreferences("session_prefs", MODE_PRIVATE)
         // Verifica si hay una sesión iniciada en SharedPreferences
         val isLogged = sharedPreferences.getBoolean("is_logged_in", false)
 
-        // Verifica si el usuario está autenticado
-        val currentUser = auth.currentUser
-        if (!isLogged || currentUser == null || !currentUser.isEmailVerified) {
-            //Toast.makeText(this, "Redirigiendo a login.", Toast.LENGTH_LONG).show()
-            startActivity(Intent(requireContext(), Login::class.java))
-            requireActivity().finish()
+        if (!isLogged) {
+            resetShared()
+            requireActivity().runOnUiThread{
+                startActivity((Intent(requireContext(),Login::class.java)))
+                requireActivity().finishAffinity()
+            }
+        }else{
+            userId = sharedPreferences.getInt("userId",-1)
         }
-        val userName = requireActivity().findViewById<TextView>(R.id.userNameTextView)
-        val userEmail = requireActivity().findViewById<TextView>(R.id.userEmailTextView)
-        if(currentUser != null){
-            val emailUser = currentUser.email.toString().split("0")
-            userName.setText(emailUser[0])
-            userEmail.setText(currentUser.email.toString())
+    }
+
+    private fun resetShared(){
+        with(sharedPreferences.edit()){
+            putInt("userId", -1)
+            putString("email","")
+            putString("nombre","")
+            putBoolean("is_logged_in",false)
+            apply()
         }
     }
 }

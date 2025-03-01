@@ -1,5 +1,6 @@
 package com.example.gymactive.ui.views.fragment.Comida.dialog
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.graphics.BitmapFactory
 import android.os.Bundle
@@ -11,16 +12,17 @@ import com.bumptech.glide.Glide
 import com.example.gymactive.R
 import com.example.gymactive.databinding.BorrarComidaDialogBinding
 import com.example.gymactive.domain.Comidas.models.Comida
+import com.example.gymactive.domain.Comidas.models.ComidaModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class DialogBorrarComida(
-    private val posicion: Int,  // Posición de la comida a eliminar
-    private val comida: Comida,  // La comida que se desea eliminar
-    private val onBorrarComida: (Int) -> Unit  // Callback para eliminar la comida
+    private val comida: ComidaModel,  // La comida que se desea eliminar
+    private val onBorrarComida: (ComidaModel) -> Unit  // Callback para eliminar la comida
 ) : DialogFragment() {
 
     private var _binding: BorrarComidaDialogBinding? = null
     private val binding get() = _binding!!
+
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         _binding = BorrarComidaDialogBinding.inflate(LayoutInflater.from(requireContext()))
@@ -30,10 +32,10 @@ class DialogBorrarComida(
         // Creación del diálogo con MaterialAlertDialog
         val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.CustomDialogStyle)
             .setView(binding.root)
-            .setMessage("¿Seguro que quieres eliminar la comida \"${comida.nombre_plato}\"?")
+            .setMessage("¿Seguro que quieres eliminar la comida \"${comida.nombrePlato}\"?")
             .setPositiveButton("Eliminar") { _, _ ->
                 // Llamamos al callback para eliminar la comida
-                onBorrarComida(posicion)
+                onBorrarComida(comida)
                 dismiss()
             }
             .setNegativeButton("Cancelar") { _, _ -> dismiss() }
@@ -70,7 +72,7 @@ class DialogBorrarComida(
     private fun setValuesDialog(binding: BorrarComidaDialogBinding) {
         // Establecer los valores de los campos
         binding.nombrePlato.apply {
-            setText(comida.nombre_plato ?: "Sin nombre")
+            setText(comida.nombrePlato ?: "Sin nombre")
             isEnabled = false  // Deshabilitar edición
         }
         binding.descricion.apply {
@@ -78,7 +80,7 @@ class DialogBorrarComida(
             isEnabled = false  // Deshabilitar edición
         }
 
-        loadImage(comida.image)
+        comida.imagen?.let { loadImage(it) }
 
     }
 

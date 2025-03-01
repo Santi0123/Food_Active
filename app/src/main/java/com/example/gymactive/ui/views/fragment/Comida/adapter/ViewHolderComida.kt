@@ -6,19 +6,20 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.gymactive.databinding.ItemComidaBinding
 import com.example.gymactive.domain.Comidas.models.Comida
+import com.example.gymactive.domain.Comidas.models.ComidaModel
 
 class ViewHolderComida(
     private val binding: ItemComidaBinding,
-    val editarComida: (Int) -> Unit,
-    val borrarComida: (Int) -> Unit
+    val editarComida: (ComidaModel) -> Unit,
+    val borrarComida: (ComidaModel) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    fun render(comida: Comida) {
+    fun render(comida: ComidaModel) {
         // Asignar nombre y descripción
-        binding.tvComidaName.text = comida.nombre_plato
+        binding.tvComidaName.text = comida.nombrePlato
         binding.tvComidaDescripcion.text = comida.descripcion
 
-        val image = comida.image
+        val image = comida.imagen ?: ""
         Glide.with(itemView.context)
             .let {
                 when {
@@ -37,12 +38,12 @@ class ViewHolderComida(
 
         // Configurar el botón de eliminación
         binding.btnDelete.setOnClickListener {
-            borrarComida(adapterPosition)
+            borrarComida(comida)
         }
 
         // Configurar el botón de editar
         binding.btnEdit.setOnClickListener {
-            editarComida(adapterPosition)
+            editarComida(comida)
         }
     }
 }

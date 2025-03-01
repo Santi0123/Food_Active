@@ -22,10 +22,6 @@ data class ResponseComida(
 
     @SerializedName("imagen")
     @Expose
-    val imagen:String,
-
-    @SerializedName("token")
-    @Expose
-    val token:String
+    val imagen:String
 ) {
 }

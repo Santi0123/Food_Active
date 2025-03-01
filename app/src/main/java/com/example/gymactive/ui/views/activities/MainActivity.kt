@@ -175,6 +175,7 @@ class MainActivity : AppCompatActivity() {
     private fun logout() {
         getSharedPreferences("session_prefs", MODE_PRIVATE)
             .edit()
+            .putInt("userId",-1)
             .putString("email","")
             .putString("nombre","")
             .putBoolean("is_logged_in",false)

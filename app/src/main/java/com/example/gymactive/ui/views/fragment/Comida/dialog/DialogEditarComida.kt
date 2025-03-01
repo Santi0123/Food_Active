@@ -1,4 +1,5 @@
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.ContentValues
 import android.graphics.Bitmap
@@ -19,6 +20,7 @@ import com.bumptech.glide.Glide
 import com.example.gymactive.R
 import com.example.gymactive.databinding.DialogComidaBinding
 import com.example.gymactive.domain.Comidas.models.Comida
+import com.example.gymactive.domain.Comidas.models.ComidaModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -28,9 +30,8 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 
 class DialogEditarComida(
-    private val posicion: Int,
-    private val comida: Comida,
-    private val onActualizarComida: (Int, Comida) -> Unit
+    private val comida: ComidaModel,
+    private val onActualizarComida: (ComidaModel) -> Unit
 ) : DialogFragment() {
 
     private lateinit var binding: DialogComidaBinding
@@ -43,11 +44,11 @@ class DialogEditarComida(
         binding = DialogComidaBinding.inflate(LayoutInflater.from(requireContext()))
 
         // Rellenamos los campos del formulario con los datos actuales de la comida
-        binding.nombrePlato.setText(comida.nombre_plato ?: "Sin nombre")
+        binding.nombrePlato.setText(comida.nombrePlato ?: "Sin nombre")
         binding.descricion.setText(comida.descripcion ?: "Sin descripción")
 
 
-        loadImage(comida.image)
+        comida.imagen?.let{loadImage(it)}
 
         binding.imagenPreview.setOnClickListener { mostrarOpcionesImagen() }
 
@@ -58,14 +59,15 @@ class DialogEditarComida(
                 val nuevoNombre = binding.nombrePlato.text.toString()
                 val nuevaDescripcion = binding.descricion.text.toString()
 
-                val comidaActualizada = Comida(
+                val comidaActualizada = ComidaModel(
                     comida.id,
+                    comida.usuarioId,
                     nuevoNombre,
                     nuevaDescripcion,
-                    imagenBase64 ?: comida.image
+                    imagenBase64 ?: comida.imagen
                 )
 
-                onActualizarComida(posicion, comidaActualizada)
+                onActualizarComida(comidaActualizada)
                 dismiss()
             }
             .setNegativeButton("Cancelar") { _, _ -> dismiss() }

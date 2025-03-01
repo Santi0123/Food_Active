@@ -16,8 +16,8 @@ interface ComidaApiServiceInterface {
      @GET("comidas/user/{userId}")
      suspend fun getComidasByUser(@Path("userId") userId: Int): Response<List<ResponseComida>>
 
-     @GET("comidas/search/{term}")
-     suspend fun searchComidas(@Path("term") term: String): Response<List<ResponseComida>>
+     @GET("comidas/search")
+     suspend fun searchComidas(@Query("term") term: String): Response<List<ResponseComida>>
 
      @POST("comidas")
      suspend fun addComida(@Body comida: RequestComida): Response<ResponseComida>
