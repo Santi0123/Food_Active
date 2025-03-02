@@ -22,9 +22,9 @@ data class ResponseLogin(
 
     @SerializedName("imagen")
     @Expose
-    val imagen:String?= null
+    val imagen:String?= null,
 
-    /*@SerializedName("token")
+    @SerializedName("token")
     @Expose
-    val token:String?=null*/
+    val token:String?=null
 )

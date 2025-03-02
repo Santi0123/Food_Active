@@ -24,55 +24,53 @@ class Registrarse : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        shared = getSharedPreferences("session_prefs",Context.MODE_PRIVATE)
+        shared = getSharedPreferences("session_prefs", Context.MODE_PRIVATE)
         binding = FragmentRegistrarseBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setObserver()
 
-        initLisenert()
-
-
+        initListener()
     }
 
-    private fun setObserver(){
-        usuarioViewModel.registerLiveData.observe(this){ usuario->
-            if (usuario != null){
+    private fun setObserver() {
+        usuarioViewModel.registerLiveData.observe(this) { usuario ->
+            if (usuario != null) {
                 savePreference(usuario)
-                Toast.makeText(this,"Registro con exito",Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Registro con éxito", Toast.LENGTH_SHORT).show()
                 cleanBox()
-                startActivity(Intent(this,Login::class.java))
-                finish()
-            }else{
+                startActivity(Intent(this, Login::class.java)) // Redirigir al login
+                finish() // Finalizar la actividad actual
+            } else {
                 resetShared()
-                Toast.makeText(this,"Comprebe su correo",Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Compruebe su correo", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
     private fun savePreference(usuario: UsuarioModel) {
-        with(shared.edit()){
-            putString("email",usuario.email)
-            putString("nombre",usuario.nombre)
-            putBoolean("is_logged_in",true)
+        with(shared.edit()) {
+            putString("email", usuario.email)
+            putString("nombre", usuario.nombre)
+            putBoolean("is_logged_in", true)
             apply()
         }
     }
 
-    private fun cleanBox(){
+    private fun cleanBox() {
         binding.textEmail.text?.clear()
         binding.textPassword.text?.clear()
     }
 
-    private fun resetShared(){
-        with(shared.edit()){
-            putString("email","")
-            putString("nombre","")
-            putBoolean("is_logged_in",false)
+    private fun resetShared() {
+        with(shared.edit()) {
+            putString("email", "")
+            putString("nombre", "")
+            putBoolean("is_logged_in", false)
             apply()
         }
     }
 
-    private  fun initLisenert(){
+    private fun initListener() {
         binding.aceptarBoton.setOnClickListener {
             val email = binding.textEmail.text.toString()
             val password = binding.textPassword.text.toString()
@@ -93,6 +91,4 @@ class Registrarse : AppCompatActivity() {
             }
         }
     }
-
-
 }

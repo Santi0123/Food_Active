@@ -40,42 +40,44 @@ class Login : AppCompatActivity() {
         }
     }
 
-    private fun setObserver(){
-        usuarioViewModel.loginLiveData.observe(this){ usuario->
-            if (usuario != null){
+    private fun setObserver() {
+        usuarioViewModel.loginLiveData.observe(this) { usuario ->
+            if (usuario != null) {
                 savePreference(usuario)
-                Toast.makeText(this,"login con exito",Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "login con éxito", Toast.LENGTH_SHORT).show()
                 cleanBox()
-                startActivity(Intent(this,MainActivity::class.java))
+                startActivity(Intent(this, MainActivity::class.java))
                 finish()
-            }else{
+            } else {
                 resetShared()
-                Toast.makeText(this,"Comprebe su correo",Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Compruebe su correo", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
     private fun savePreference(usuario: UsuarioModel) {
-        with(shared.edit()){
-            putInt("userId",usuario.id!!)
-            putString("email",usuario.email)
-            putString("nombre",usuario.nombre)
-            putBoolean("is_logged_in",true)
+        with(shared.edit()) {
+            putInt("userId", usuario.id!!)
+            putString("email", usuario.email)
+            putString("nombre", usuario.nombre)
+            putString("token", usuario.token) // Guardar el token en SharedPreferences
+            putBoolean("is_logged_in", true)
             apply()
         }
     }
 
-    private fun resetShared(){
-        with(shared.edit()){
+    private fun resetShared() {
+        with(shared.edit()) {
             putInt("userId", -1)
-            putString("email","")
-            putString("nombre","")
-            putBoolean("is_logged_in",false)
+            putString("email", "")
+            putString("nombre", "")
+            putBoolean("is_logged_in", false)
+            remove("token") // Eliminar el token de SharedPreferences
             apply()
         }
     }
 
-    private fun cleanBox(){
+    private fun cleanBox() {
         loginBinding.textEmail.text?.clear()
         loginBinding.textPassword.text?.clear()
     }
@@ -84,36 +86,36 @@ class Login : AppCompatActivity() {
         return shared.getBoolean("is_logged_in", false)
     }
 
-    private fun initListener(){
+    private fun initListener() {
         loginBinding.aceptarBoton.setOnClickListener {
 
             val email = loginBinding.textEmail.text.toString().trim()
             val password = loginBinding.textPassword.text.toString().trim()
 
-            if(email.isEmpty()|| password.isEmpty()){
-                Toast.makeText(this,"Todos los campos deben de estar rellenos",
-                    Toast.LENGTH_SHORT).show()
-            } else{
+            if (email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(
+                    this, "Todos los campos deben de estar rellenos",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
                 lifecycleScope.launch {
-                    usuarioViewModel.login(email,password)
+                    usuarioViewModel.login(email, password)
                 }
             }
         }
 
-        loginBinding.sinRecordar.setOnClickListener{
+        loginBinding.sinRecordar.setOnClickListener {
             resertPassword()
         }
 
         loginBinding.registrarse.setOnClickListener {
             cleanBox()
-            startActivity(Intent(this,Registrarse::class.java))
+            startActivity(Intent(this, Registrarse::class.java))
             finish()
         }
     }
 
-
-
-    private fun resertPassword(){
-        Toast.makeText(this,"Contacte con el admin",Toast.LENGTH_SHORT).show()
+    private fun resertPassword() {
+        Toast.makeText(this, "Contacte con el admin", Toast.LENGTH_SHORT).show()
     }
 }
