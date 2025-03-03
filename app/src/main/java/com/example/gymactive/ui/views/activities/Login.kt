@@ -60,6 +60,7 @@ class Login : AppCompatActivity() {
             putInt("userId", usuario.id!!)
             putString("email", usuario.email)
             putString("nombre", usuario.nombre)
+            putString("imagen",usuario.imagen)
             putString("token", usuario.token) // Guardar el token en SharedPreferences
             putBoolean("is_logged_in", true)
             apply()
@@ -71,6 +72,7 @@ class Login : AppCompatActivity() {
             putInt("userId", -1)
             putString("email", "")
             putString("nombre", "")
+            putString("imagen","")
             putBoolean("is_logged_in", false)
             remove("token") // Eliminar el token de SharedPreferences
             apply()

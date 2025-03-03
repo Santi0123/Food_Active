@@ -1,75 +1,45 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+<!-- res/layout/fragment_setting.xml -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.views.fragment.Setting.SettingFragment"
+    android:padding="16dp"
+    android:gravity="center"
     android:background="@color/fondo_de_la_aplicacion">
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout"
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/galeria"/>
+
+    <EditText
+        android:id="@+id/editTextUserName"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:padding="16dp">
+        android:layout_height="wrap_content"
+        android:hint="Nombre"
+        android:layout_marginTop="16dp"/>
 
-        <!-- Campo para el nombre del usuario -->
+    <Button
+        android:id="@+id/openGalleryButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Seleccionar Imagen"
+        android:layout_marginTop="16dp"/>
 
+    <Button
+        android:id="@+id/saveButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Guardar"
+        android:layout_marginTop="16dp"/>
 
-        <Button
-            android:id="@+id/saveButton"
-            android:layout_width="114dp"
-            android:layout_height="67dp"
-            android:layout_gravity="center|bottom"
-            android:layout_marginStart="36dp"
-            android:layout_marginTop="64dp"
-            android:layout_weight="1"
-            android:background="@drawable/boton_selector"
-            android:text="Aceptar"
-            app:backgroundTint="@null"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView" />
-
-        <Button
-            android:id="@+id/cerrarAjustes"
-            android:layout_width="114dp"
-            android:layout_height="67dp"
-            android:layout_gravity="center|bottom"
-            android:layout_marginStart="248dp"
-            android:layout_marginTop="64dp"
-            android:layout_weight="1"
-            android:background="@drawable/boton_selector"
-            android:text="Cerrar"
-            app:backgroundTint="@null"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView" />
-
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_marginTop="32dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/foto_principal"
-            app:layout_constraintTop_toBottomOf="@id/openGalleryButton"
-            tools:layout_editor_absoluteX="16dp" />
-
-        <Button
-            android:id="@+id/openGalleryButton"
-            android:layout_width="wrap_content"
-            android:layout_height="60dp"
-            android:layout_gravity="center|bottom"
-            android:layout_weight="1"
-            android:background="@drawable/boton_selector"
-            android:text="Abrir Galería"
-            app:backgroundTint="@null"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.234" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <Button
+        android:id="@+id/cerrarAjustes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cerrar"
+        android:layout_marginTop="16dp"/>
+</LinearLayout>
