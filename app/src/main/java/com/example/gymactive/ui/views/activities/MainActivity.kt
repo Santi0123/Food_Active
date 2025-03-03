@@ -158,7 +158,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadUserData(navView: NavigationView) {
         val sharedPreferences = getSharedPreferences("session_prefs", MODE_PRIVATE)
-        val userName = sharedPreferences.getString("nombre", "Nombre de Usuario")
+        val userName = sharedPreferences.getString("nombre", "Nuevo usuario")
         val userEmail = sharedPreferences.getString("email", "user@example.com")
         val imageUriString = sharedPreferences.getString("imagen", "")
 
@@ -170,12 +170,19 @@ class MainActivity : AppCompatActivity() {
         userNameTextView.text = userName
         userEmailTextView.text = userEmail
 
-        if (!imageUriString.isNullOrEmpty()) {
+        if (imageUriString.isNullOrEmpty()) {
+            // Cargar imagen predeterminada si no hay ninguna imagen establecida
+            Glide.with(this)
+                .load(R.drawable.foto_principal) // Asegúrate de tener una imagen predeterminada en tus recursos
+                .circleCrop()
+                .into(userImageView)
+        } else {
             Glide.with(this)
                 .load(imageUriString)
                 .circleCrop()
                 .into(userImageView)
         }
     }
+
 
 }
