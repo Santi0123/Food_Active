@@ -29,6 +29,11 @@
                 android:id="@+id/logoutMenu"
                 android:title="Cerrar sesión"
                 android:icon="@drawable/logout"/>
+            <item
+                android:id="@+id/shareMenu"
+                android:title="Compartir"
+                android:icon="@drawable/share"/>
+
         </menu>
     </item>
 

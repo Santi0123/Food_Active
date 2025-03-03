@@ -1,67 +1,110 @@
-<?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.views.fragment.Home.Home">
+    android:background="@color/fondo_de_la_aplicacion">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/fondo_de_la_aplicacion">
+    <!-- Primer CardView: Video -->
 
-        <!-- CardView existente -->
+    <!-- Segundo CardView: Información del usuario -->
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardViewUserInfo"
+        android:layout_width="216dp"
+        android:layout_height="315dp"
+        android:layout_margin="8dp"
+        android:padding="16dp"
+        app:cardBackgroundColor="@color/color_caja"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.658">
+
+        <!-- LinearLayout con la información del usuario -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="match_parent"
+                android:layout_height="160dp"
+                android:layout_marginBottom="8dp"
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/foto_principal" />
+
+            <TextView
+                android:id="@+id/titleTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center"
+                android:text="Santiago"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/subtitleTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Comienza tu aventura"
+                android:textColor="#9E9494"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <LinearLayout
+        android:layout_width="403dp"
+        android:layout_height="244dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.096">
+
+        <!-- Video centrado dentro del CardView -->
+
+        <!-- Botón para omitir debajo del video -->
+
         <androidx.cardview.widget.CardView
-            android:id="@+id/cardView"
-            android:layout_width="200dp"
-            android:layout_height="280dp"
+            android:id="@+id/cardViewVideo"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
             android:layout_margin="8dp"
             android:padding="16dp"
             app:cardBackgroundColor="@color/color_caja"
             app:cardCornerRadius="16dp"
-            app:cardElevation="10dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:cardElevation="10dp">
 
-            <LinearLayout
+            <!-- LinearLayout centrado con el VideoView y el Button -->
+            <VideoView
+                android:id="@+id/videoView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center_horizontal"
-                android:orientation="vertical">
+                app:layout_constraintWidth_percent="0.8" />
 
-                <ImageView
-                    android:id="@+id/imageView"
-                    android:layout_width="match_parent"
-                    android:layout_height="160dp"
-                    android:layout_marginBottom="8dp"
-                    android:scaleType="centerCrop"
-                    app:srcCompat="@drawable/foto_principal" />
-
-                <TextView
-                    android:id="@+id/titleTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="4dp"
-                    android:fontFamily="sans-serif-medium"
-                    android:gravity="center"
-                    android:text="Santiago"
-                    android:textColor="@color/white"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/subtitleTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Comienza tu aventura"
-                    android:textColor="#9E9494"
-                    android:textSize="14sp" />
-            </LinearLayout>
+            <Button
+                android:id="@+id/btnOmitir"
+                android:layout_width="wrap_content"
+                android:layout_height="37dp"
+                android:layout_marginTop="8dp"
+                android:backgroundTint="@color/design_default_color_error"
+                android:text="Omitir"
+                android:textColor="@color/white" />
         </androidx.cardview.widget.CardView>
+    </LinearLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

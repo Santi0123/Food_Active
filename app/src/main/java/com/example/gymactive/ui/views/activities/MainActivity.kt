@@ -1,5 +1,6 @@
 package com.example.gymactive.ui.views.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -63,24 +64,24 @@ class MainActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.vistaGeneral -> {
                     navController.navigate(R.id.vistaGeneral)
-                    drawerLayout.closeDrawer(GravityCompat.START)
                 }
                 R.id.settingMenu -> {
                     navController.navigate(R.id.settingMenu)
-                    drawerLayout.closeDrawer(GravityCompat.START)
                 }
                 R.id.comidaMenu -> {
                     navController.navigate(R.id.comidaMenu)
-                    drawerLayout.closeDrawer(GravityCompat.START)
                 }
                 R.id.logoutMenu -> {
                     logout()
-                    drawerLayout.closeDrawer(GravityCompat.START)
                 }
-                else -> drawerLayout.closeDrawer(GravityCompat.START)
+                R.id.shareMenu -> {
+                    compartirApp()
+                }
             }
+            drawerLayout.closeDrawer(GravityCompat.START)
             true
         }
+
 
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
@@ -113,6 +114,18 @@ class MainActivity : AppCompatActivity() {
         }
 
         loadUserData(mainBinding.navView)
+    }
+
+    private fun compartirApp() {
+        val mensaje = "¡Hola! Te recomiendo esta herramienta: https://play.google.com/store/apps/details?id=com.example.gymactive"
+
+        val intent = Intent(Intent.ACTION_SEND).apply {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_SUBJECT, "Mira esta increíble herramienta")
+            putExtra(Intent.EXTRA_TEXT, mensaje)
+        }
+
+        startActivity(Intent.createChooser(intent, "Compartir vía"))
     }
 
     override fun onSupportNavigateUp(): Boolean {
