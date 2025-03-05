@@ -17,30 +17,30 @@ import dagger.hilt.android.AndroidEntryPoint
 class Registrarse : AppCompatActivity() {
 
     private lateinit var binding: FragmentRegistrarseBinding
-    val usuarioViewModel: UsuarioViewModel by viewModels()
-    lateinit var shared: SharedPreferences
+    private val usuarioViewModel: UsuarioViewModel by viewModels()
+    private val shared: SharedPreferences by lazy {
+        getSharedPreferences("session_prefs", Context.MODE_PRIVATE)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        shared = getSharedPreferences("session_prefs", Context.MODE_PRIVATE)
         binding = FragmentRegistrarseBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setObserver()
-
         initListener()
     }
 
     private fun setObserver() {
         usuarioViewModel.registerLiveData.observe(this) { usuario ->
-            if (usuario != null) {
-                savePreference(usuario)
+            usuario?.let {
+                savePreference(it)
                 Toast.makeText(this, "Registro con éxito", Toast.LENGTH_SHORT).show()
                 cleanBox()
-                startActivity(Intent(this, Login::class.java)) // Redirigir al login
-                finish() // Finalizar la actividad actual
-            } else {
+                startActivity(Intent(this, Login::class.java))
+                finish()
+            } ?: run {
                 resetShared()
                 Toast.makeText(this, "Compruebe su correo", Toast.LENGTH_SHORT).show()
             }
@@ -51,7 +51,6 @@ class Registrarse : AppCompatActivity() {
         with(shared.edit()) {
             putString("email", usuario.email)
             putString("nombre", usuario.nombre)
-            putBoolean("is_logged_in", true)
             apply()
         }
     }
@@ -59,35 +58,37 @@ class Registrarse : AppCompatActivity() {
     private fun cleanBox() {
         binding.textEmail.text?.clear()
         binding.textPassword.text?.clear()
+        binding.confirmarContrasenna.text?.clear()
     }
 
     private fun resetShared() {
         with(shared.edit()) {
-            putString("email", "")
-            putString("nombre", "")
-            putBoolean("is_logged_in", false)
+            clear()
             apply()
         }
     }
 
     private fun initListener() {
         binding.aceptarBoton.setOnClickListener {
-            val email = binding.textEmail.text.toString()
+            val email = binding.textEmail.text.toString().trim()
             val password = binding.textPassword.text.toString()
             val repeatPassword = binding.confirmarContrasenna.text.toString()
             val privacyAccepted = binding.checkBox.isChecked
 
-            if (!privacyAccepted) {
-                Toast.makeText(this, "Debe aceptar los términos y condiciones", Toast.LENGTH_LONG).show()
-                return@setOnClickListener
-            }
+            when {
+                !privacyAccepted ->
+                    Toast.makeText(this, "Debe aceptar los términos y condiciones", Toast.LENGTH_LONG).show()
 
-            if (email.isEmpty() || password.isEmpty() || repeatPassword.isEmpty()) {
-                Toast.makeText(this, "No debe dejar campos vacíos", Toast.LENGTH_LONG).show()
-            } else if (password != repeatPassword) {
-                Toast.makeText(this, "Las contraseñas no coinciden", Toast.LENGTH_LONG).show()
-            } else {
-                usuarioViewModel.register(email, password)
+                email.isEmpty() || password.isEmpty() || repeatPassword.isEmpty() ->
+                    Toast.makeText(this, "No debe dejar campos vacíos", Toast.LENGTH_LONG).show()
+
+                !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() ->
+                    Toast.makeText(this, "Ingrese un correo válido", Toast.LENGTH_LONG).show()
+
+                password != repeatPassword ->
+                    Toast.makeText(this, "Las contraseñas no coinciden", Toast.LENGTH_LONG).show()
+
+                else -> usuarioViewModel.register(email, password)
             }
         }
     }
