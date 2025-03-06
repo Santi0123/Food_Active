@@ -60,6 +60,7 @@ class ComidaFragment : Fragment() {
 
     private fun setAdapter() {
         adapterComida = AdapterComida(
+            requireContext(),
             listaComidas = emptyList<ComidaModel>().toMutableList(),
             {comida-> updateComida(comida)},
             {comida-> delComida(comida)}

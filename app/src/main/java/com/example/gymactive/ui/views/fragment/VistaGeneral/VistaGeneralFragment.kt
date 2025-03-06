@@ -44,6 +44,7 @@ class VistaGeneralFragment : Fragment(){
 
     private fun setAdapter(){
         adapterVistaGeneral = AdapterVistaGeneral(
+            requireContext(),
             listaComidas = emptyList()
         )
         this.binding.rvComidas.adapter = adapterVistaGeneral

@@ -1,5 +1,6 @@
 package com.example.gymactive.ui.views.fragment.VistaGeneral.adapter
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -9,6 +10,7 @@ import com.example.gymactive.domain.Comidas.models.ComidaModel
 
 
 class AdapterVistaGeneral(
+    val context: Context,
     var listaComidas: List<ComidaModel>,
 
     ) : RecyclerView.Adapter<ViewHolderVistaGeneral>() {
@@ -16,7 +18,7 @@ class AdapterVistaGeneral(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderVistaGeneral {
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding = CardComidaBinding.inflate(layoutInflater, parent, false)
-        return ViewHolderVistaGeneral(binding)
+        return ViewHolderVistaGeneral(context, binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolderVistaGeneral, position: Int) {

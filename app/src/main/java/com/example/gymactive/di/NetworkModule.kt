@@ -1,11 +1,14 @@
 // En src/main/java/com/example/gymactive/di/NetworkModule.kt
 package com.example.gymactive.di
 
+import android.content.Context
+import android.content.SharedPreferences
 import com.example.gymactive.data.comida.network.services.ComidaApiServiceInterface
 import com.example.gymactive.data.usuario.network.service.UsuarioApiServiceInterface
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -20,14 +23,23 @@ object NetworkModule {
 
     @Provides
     @Singleton
+    fun providerSharedPreferences(@ApplicationContext context: Context):SharedPreferences{
+        return context.getSharedPreferences("session_prefs",Context.MODE_PRIVATE)
+    }
+
+    @Provides
+    @Singleton
     fun provideTokenProvider(): TokenProvider {
         return TokenProvider()
     }
 
     @Provides
     @Singleton
-    fun provideTokenInterceptor(tokenProvider: TokenProvider): TokenInterceptor {
-        return TokenInterceptor(tokenProvider)
+    fun provideTokenInterceptor(
+        tokenProvider: TokenProvider,
+        sharedPreferences: SharedPreferences
+    ): TokenInterceptor {
+        return TokenInterceptor(tokenProvider,sharedPreferences)
     }
 
     @Provides

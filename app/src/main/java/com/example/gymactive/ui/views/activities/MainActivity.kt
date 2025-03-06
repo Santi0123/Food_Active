@@ -171,7 +171,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadUserData(navView: NavigationView) {
         val sharedPreferences = getSharedPreferences("session_prefs", MODE_PRIVATE)
-        val userName = sharedPreferences.getString("nombre", "Nuevo usuario")
+        val userName = sharedPreferences.getString("nombre", "")
         val userEmail = sharedPreferences.getString("email", "user@example.com")
         val imageUriString = sharedPreferences.getString("imagen", "")
 
@@ -180,7 +180,14 @@ class MainActivity : AppCompatActivity() {
         userNameTextView = headerView.findViewById(R.id.userNameTextView)
         userEmailTextView = headerView.findViewById(R.id.userEmailTextView)
 
-        userNameTextView.text = userName
+        // Si el nombre está vacío, extraemos la parte antes del @ del correo
+        val displayName = if (userName.isNullOrEmpty()) {
+            userEmail?.substringBefore('@')?.capitalize() ?: "Nuevo usuario"
+        } else {
+            userName.capitalize()
+        }
+
+        userNameTextView.text = displayName
         userEmailTextView.text = userEmail
 
         if (imageUriString.isNullOrEmpty()) {
@@ -197,5 +204,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
 }
+
+
+
+

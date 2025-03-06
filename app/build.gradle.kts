@@ -75,9 +75,8 @@ dependencies {
     //Convertirá nuestro Gson a data class. Tendrá anotaciones de Serialización.
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
 
-    implementation("com.github.bumptech.glide:glide:4.15.1")
+    implementation(libs.glide)
     implementation(libs.androidx.activity)
-    annotationProcessor("com.github.bumptech.glide:compiler:4.15.1")
     //implementation("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

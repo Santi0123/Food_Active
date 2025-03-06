@@ -11,7 +11,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import android.widget.VideoView
-import androidx.cardview.widget.CardView
 import com.example.gymactive.R
 
 class Home : Fragment() {
@@ -24,7 +23,8 @@ class Home : Fragment() {
     private val KEY_VIDEO_SEEN = "video_seen_"
     private val KEY_IS_LOGGED_IN = "is_logged_in"
     private val KEY_USER_ID = "userId"
-    private val KEY_USER_NAME = "nombre" // Clave para el nombre del usuario
+    private val KEY_USER_NAME = "nombre"
+    private val KEY_USER_EMAIL = "email"
 
     private lateinit var shared: SharedPreferences
 
@@ -46,9 +46,18 @@ class Home : Fragment() {
 
         if (isLoggedIn) {
             // Obtener el nombre del usuario logueado
-            val userName = shared.getString(KEY_USER_NAME, "Aún no tiene nombre") ?: "Aún no tiene nombre"
+            val userName = shared.getString(KEY_USER_NAME, "")
+            val userEmail = shared.getString(KEY_USER_EMAIL, "user@example.com")
+
+            // Si el nombre está vacío, se obtiene el nombre del correo
+            val displayName = if (userName.isNullOrEmpty()) {
+                userEmail?.substringBefore('@')?.capitalize() ?: "Aún no tiene nombre"
+            } else {
+                userName.capitalize()
+            }
+
             // Mostrar el nombre del usuario en el TextView
-            titleTextView.text = userName
+            titleTextView.text = displayName
 
             // Obtener el ID del usuario logueado
             val userId = shared.getInt(KEY_USER_ID, -1)

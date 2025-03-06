@@ -71,7 +71,7 @@ class DialogAgregarComida(
                 val descripcion = binding.descricion.text.toString()
 
                 // Validación de campos
-                if (nombre.isNotEmpty() && descripcion.isNotEmpty() /*&& isImageConverted*/) {
+                if (nombre.isNotEmpty() && descripcion.isNotEmpty() && isImageConverted) {
                     val nuevaComida =
                         ComidaModel(null,userId, nombre, descripcion, imagenBase64)
                     comida(nuevaComida)
@@ -182,9 +182,13 @@ class DialogAgregarComida(
 
     private fun convertBitmapToBase64(bitmap: Bitmap): String {
         val outputStream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream) // Ajusta la calidad según tus necesidades
-        return Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT)
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream) // Calidad 80%
+        val base64String = Base64.encodeToString(outputStream.toByteArray(), Base64.NO_WRAP)
+
+        // Agregar la cabecera adecuada
+        return "data:image/jpeg;base64,$base64String"
     }
+
 
     private fun saveImageToGallery(imageUri: Uri) {
         val contentValues = ContentValues().apply {
