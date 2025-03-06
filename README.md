@@ -1,5 +1,21 @@
 ## 🏋️ NOMBRE DE LA APLICACIÓN: GymActive
 
+ Tabla de Contenidos
+- [Descripción de la Aplicación](#descripción-de-la-aplicación)
+- [Características de la Aplicación](#características-de-la-aplicación)
+- [Instalación](#instalación)
+- [Configuración](#configuración)
+- [Uso](#uso)
+- [Contribución](#contribución)
+- [Licencia](#licencia)
+- [Versión 1.1](#versión-11)
+- [Versión 1.2](#versión-12)
+- [Versión 1.3](#versión-13)
+- [Versión 1.4](#versión-14)
+- [Versión 2.1](#versión-21)
+- [Versión 3.1](#versión-31)
+- [Versión 4.1](#versión-41)
+
 ### Descripción de la Aplicación:
 
 Mi propuesta consiste en una aplicación para Android que ofrecerá diversas funcionalidades. Se asemejará a una red social y permitirá a los usuarios mantener una motivación adicional, así como explorar nuevos aspectos relacionados con la nutrición y distintos entrenamientos. Además, facilitará la conexión con personas que comparten el mismo entusiasmo por el deporte.
