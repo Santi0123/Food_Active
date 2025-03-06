@@ -904,4 +904,231 @@ implementation("androidx.fragment:fragment-ktx:1.3.2")
 implementation("androidx.activity:activity-ktx:1.2.2")
 ```
 
+## 📸 Versión 3.1: Captura de Imágenes y Multimedia
+
+### Implementación de la Captura de Imágenes:
+
+#### Clase `DialogAgregarComida`:
+- **Funcionalidad**: Permite al usuario agregar una nueva comida, incluyendo la opción de capturar o seleccionar una imagen para asociarla con la comida.
+- **Lógica de Captura y Selección de Imagen**:
+  - Se ha implementado un `DialogFragment` que muestra un diálogo donde el usuario puede capturar una foto con la cámara o seleccionar una imagen de la galería.
+  - Utiliza el contrato `ActivityResultContracts.TakePicture` para tomar una foto y `ActivityResultContracts.GetContent` para seleccionar una imagen de la galería.
+  - La imagen seleccionada o tomada se muestra en una vista previa en un `ImageView`.
+
+#### Archivos de Implementación:
+
+- **`DialogAgregarComida`**:
+  - Se encarga de manejar la captura y selección de imágenes, convirtiéndolas en una cadena Base64 para almacenamiento o uso posterior.
+  - Además, guarda la imagen en la galería del dispositivo y permite que se guarde la imagen seleccionada o tomada junto con otros datos de la comida.
+
+### Implementación de la Conversión de Imagen:
+
+- **Conversión a Base64**:  
+  La imagen capturada o seleccionada se convierte a formato Base64 utilizando el método `convertImageToBase64`, lo cual es útil para almacenar o transmitir la imagen en formato de texto.
+  
+  **Flujo**:
+  - Se redimensiona la imagen a un tamaño adecuado (800x800 píxeles) para optimizar el uso de memoria.
+  - Se convierte a Base64 utilizando el formato JPEG con una calidad del 80%.
+
+#### Funcionalidad de Edición y Eliminación de Imágenes:
+
+- **Edición de Imágenes**:
+  - Similar a la captura de una nueva imagen, se proporciona la opción de tomar una foto o seleccionar una imagen desde la galería para reemplazar una imagen existente de la comida.
+  - Después de editar la imagen, el flujo de conversión a Base64 y actualización de la imagen en la vista previa sigue el mismo proceso.
+
+- **Eliminación de Imagen**:
+  - Para eliminar una imagen, se agrega una opción en el diálogo de edición que permite al usuario borrar la imagen asociada a la comida, estableciendo el campo `imagenBase64` como `null` y actualizando la vista previa para reflejar la eliminación.
+
+#### Funcionalidades Adicionales:
+
+- **Guardar la Imagen en la Galería**:
+  - La imagen capturada se guarda en la galería del dispositivo utilizando `MediaStore`, lo que asegura que la imagen se almacene correctamente para su acceso posterior.
+  - El proceso incluye la creación de un archivo con un nombre único basado en la fecha y hora, y la actualización de la galería con la imagen recién tomada o seleccionada.
+
+#### Permisos Requeridos:
+- **Permiso de Cámara**: Se requiere el permiso `Manifest.permission.CAMERA` para poder acceder a la cámara del dispositivo.
+- **Permiso de Almacenamiento**: Para dispositivos con Android por debajo de la versión 10, se requiere el permiso `Manifest.permission.WRITE_EXTERNAL_STORAGE` para guardar la imagen en la galería.
+
+### Proceso de Implementación:
+
+1. **Mostrar Opciones de Imagen**:
+   - Se muestra un diálogo con las opciones "Tomar foto" o "Seleccionar de galería".
+   
+2. **Tomar Foto**:
+   - Se verifica si se tiene el permiso para acceder a la cámara y, si es así, se inicia la captura de la imagen.
+   
+3. **Seleccionar de Galería**:
+   - Se permite al usuario seleccionar una imagen desde la galería utilizando el contrato `ActivityResultContracts.GetContent`.
+
+4. **Conversión a Base64**:
+   - La imagen seleccionada o tomada se convierte a Base64 y se actualiza la vista previa en el `ImageView`.
+
+5. **Guardar en la Galería**:
+   - Después de tomar la foto, la imagen se guarda en la galería utilizando `MediaStore`.
+
+---
+
+### Código de la Funcionalidad:
+
+- **Métodos Clave**:
+  - `createImageUri`: Crea un URI único para la imagen capturada.
+  - `mostrarOpcionesImagen`: Muestra el diálogo con las opciones para tomar una foto o seleccionar una imagen.
+  - `convertImageToBase64`: Convierte la imagen a formato Base64 para su almacenamiento o uso posterior.
+  - `saveImageToGallery`: Guarda la imagen capturada en la galería del dispositivo.
+
+Claro, aquí te dejo la documentación de la **Versión 4.1** del proyecto con ejemplos de código integrados, y redactada de manera que suene como si fuera tuya:
+
+---
+
+## 🛠️ Versión 4.1: Adaptación a API REST y Autenticación con Token
+
+### Descripción General:
+
+En esta versión, he realizado una serie de cambios clave para mejorar la seguridad y el rendimiento de la herramienta. El cambio principal es la adaptación a una arquitectura basada en **API REST**, lo cual facilita la interacción entre la aplicación y el backend. Además, he implementado un nuevo sistema de autenticación con **tokens JWT**, reemplazando el sistema anterior basado en Firebase. Esto no solo mejora la seguridad, sino que también hace que el manejo de sesiones sea más eficiente.
+
+### Cambios Principales:
+
+1. **Transición a API REST:**
+   La estructura del proyecto ha sido modificada para cumplir con los principios RESTful. Ahora la comunicación entre la aplicación y el servidor es a través de solicitudes HTTP (GET, POST, PUT, DELETE).
+
+2. **Autenticación con Token JWT:**
+   El sistema de autenticación ya no depende de Firebase. Ahora, tras el inicio de sesión, el backend genera un **token JWT** que se utiliza para autenticar al usuario en futuras solicitudes.
+
+3. **Actualización en el formato de logs:**
+   El formato de los logs ahora sigue una estructura JSON, lo que facilita el análisis y la integración con otras herramientas de monitoreo.
+
+---
+
+### Implementación de la Autenticación con Token JWT:
+
+El backend ahora utiliza un sistema basado en **JSON Web Tokens (JWT)** para manejar la autenticación. A continuación, te muestro el proceso de cómo se genera y valida el token en el servidor.
+
+#### Generación del Token:
+
+Cuando un usuario se autentica, el servidor valida las credenciales y, si son correctas, genera un token JWT. Este token se utiliza para autenticar al usuario en todas las solicitudes subsiguientes. Aquí está el código básico que implementé para generar el token:
+
+```java
+// Controlador de autenticación
+@RestController
+@RequestMapping("/api/auth")
+public class AuthController {
+
+    private final AuthenticationManager authenticationManager;
+    private final JwtTokenProvider jwtTokenProvider;
+
+    @Autowired
+    public AuthController(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider) {
+        this.authenticationManager = authenticationManager;
+        this.jwtTokenProvider = jwtTokenProvider;
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
+        // Autenticación de las credenciales
+        Authentication authentication = authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(
+                loginRequest.getUsername(),
+                loginRequest.getPassword()
+            )
+        );
+
+        // Establecer el contexto de seguridad
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        // Generar el token JWT
+        String jwt = jwtTokenProvider.generateToken(authentication);
+        
+        // Devolver el token al cliente
+        return ResponseEntity.ok(new JwtResponse(jwt));
+    }
+}
+```
+
+#### Explicación del Código:
+
+- **Autenticación:** Se verifica que las credenciales enviadas por el cliente (nombre de usuario y contraseña) sean correctas.
+- **Generación del Token JWT:** Si las credenciales son válidas, se genera un token JWT utilizando el `JwtTokenProvider`.
+- **Respuesta:** El token generado se devuelve al cliente en formato JSON.
+
+#### `JwtTokenProvider` - Generación del Token:
+
+La clase `JwtTokenProvider` es la responsable de generar el token y de validarlo en solicitudes posteriores. Aquí está el código para la generación del token:
+
+```java
+public class JwtTokenProvider {
+
+    private final String JWT_SECRET = "secret_key";  // Clave secreta para firmar el JWT
+    private final long JWT_EXPIRATION = 604800000L; // 7 días en milisegundos
+
+    public String generateToken(Authentication authentication) {
+        // Extraer el nombre de usuario del contexto de seguridad
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + JWT_EXPIRATION);
+
+        // Generar el token JWT
+        return Jwts.builder()
+                .setSubject(userPrincipal.getUsername())
+                .setIssuedAt(now)
+                .setExpiration(expiryDate)
+                .signWith(SignatureAlgorithm.HS512, JWT_SECRET)
+                .compact();
+    }
+
+    // Validación del token en futuras solicitudes
+    public boolean validateToken(String authToken) {
+        try {
+            Jwts.parser().setSigningKey(JWT_SECRET).parseClaimsJws(authToken);
+            return true;
+        } catch (SignatureException | ExpiredJwtException | UnsupportedJwtException | MalformedJwtException | IllegalArgumentException e) {
+            return false;
+        }
+    }
+}
+```
+
+#### Explicación del Código:
+
+- **Generación del token:** El método `generateToken` toma un objeto `Authentication` que contiene la información del usuario autenticado. Luego, utiliza esta información para crear el token JWT, firmado con una clave secreta y con una fecha de expiración configurada.
+- **Validación del token:** El método `validateToken` verifica que el token recibido sea válido y no haya expirado.
+
+---
+
+### Integración en el Frontend (Android):
+
+Desde el lado del cliente, cuando el usuario se loguea, el token se recibe y se almacena para usarlo en solicitudes posteriores. Aquí te muestro cómo gestioné la autenticación en el lado de la aplicación Android.
+
+#### Envío del Token en las Solicitudes HTTP:
+
+Cada vez que se realiza una solicitud al servidor que requiere autenticación, el token JWT debe enviarse en los encabezados HTTP. Este es un ejemplo de cómo lo implementé utilizando Retrofit:
+
+```kotlin
+// Interceptor para añadir el token al encabezado de la solicitud
+class AuthenticationInterceptor(private val token: String) : Interceptor {
+    override fun intercept(chain: Interceptor.Chain): Response {
+        val newRequest = chain.request().newBuilder()
+            .addHeader("Authorization", "Bearer $token")
+            .build()
+        return chain.proceed(newRequest)
+    }
+}
+
+// Configuración de Retrofit
+val retrofit = Retrofit.Builder()
+    .baseUrl("https://miapi.com")
+    .client(
+        OkHttpClient.Builder()
+            .addInterceptor(AuthenticationInterceptor("mi_token_jwt"))
+            .build()
+    )
+    .addConverterFactory(GsonConverterFactory.create())
+    .build()
+```
+
+#### Explicación del Código:
+
+- **Interceptor:** El interceptor `AuthenticationInterceptor` es responsable de agregar el token JWT en el encabezado `Authorization` de cada solicitud HTTP. Esto asegura que todas las solicitudes autenticadas sean procesadas correctamente por el servidor.
+- **Retrofit:** La configuración de Retrofit incluye el interceptor, asegurando que el token sea añadido automáticamente a cada solicitud.
+
+
 
