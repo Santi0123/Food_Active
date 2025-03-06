@@ -78,6 +78,7 @@ class ComidaFragment : Fragment() {
         comidaViewModel.newComidaLiveData.observe(viewLifecycleOwner, { newComida ->
             newComida?.let {
                 adapterComida.listaComidas.add(it)
+                comidaViewModel.showComidas(sharedPreferences.getInt("userId",-1))
                 adapterComida.notifyItemInserted(adapterComida.listaComidas.lastIndex)
                 layoutManager.scrollToPosition(adapterComida.listaComidas.lastIndex)
             }
@@ -96,6 +97,7 @@ class ComidaFragment : Fragment() {
             val index = adapterComida.listaComidas.indexOfFirst { it.id == comidaUpdate?.id }
             if (index != -1) {
                 adapterComida.listaComidas[index] = comidaUpdate!!
+                comidaViewModel.showComidas(sharedPreferences.getInt("userId",-1))
                 adapterComida.notifyItemChanged(index)
                 layoutManager.scrollToPositionWithOffset(index, adapterComida.listaComidas.size)
             }

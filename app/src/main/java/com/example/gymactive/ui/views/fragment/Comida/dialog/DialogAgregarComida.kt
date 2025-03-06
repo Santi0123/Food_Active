@@ -36,7 +36,7 @@ class DialogAgregarComida(
     private lateinit var binding: DialogComidaBinding
     private var imagenBase64: String? = null
     private var photoUri: Uri? = null
-    private var isImageConverted = false // Indicador de que la conversión de la imagen ha terminado
+    private var isImageConverted = false
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         binding = DialogComidaBinding.inflate(LayoutInflater.from(requireContext()))
@@ -151,7 +151,7 @@ class DialogAgregarComida(
         CoroutineScope(Dispatchers.IO).launch {
             val inputStream = requireContext().contentResolver.openInputStream(uri)
             val bitmap = BitmapFactory.decodeStream(inputStream)
-            val resizedBitmap = resizeBitmap(bitmap, 800, 800) // Ajusta el tamaño según tus necesidades
+            val resizedBitmap = resizeBitmap(bitmap, 800, 800)
             imagenBase64 = convertBitmapToBase64(resizedBitmap)
 
             // Actualizamos el indicador de que la conversión ha terminado
@@ -182,7 +182,7 @@ class DialogAgregarComida(
 
     private fun convertBitmapToBase64(bitmap: Bitmap): String {
         val outputStream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream) // Calidad 80%
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream)
         val base64String = Base64.encodeToString(outputStream.toByteArray(), Base64.NO_WRAP)
 
         // Agregar la cabecera adecuada
