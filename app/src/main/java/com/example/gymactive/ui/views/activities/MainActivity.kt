@@ -180,7 +180,6 @@ class MainActivity : AppCompatActivity() {
         userNameTextView = headerView.findViewById(R.id.userNameTextView)
         userEmailTextView = headerView.findViewById(R.id.userEmailTextView)
 
-        // Si el nombre está vacío, extraemos la parte antes del @ del correo
         val displayName = if (userName.isNullOrEmpty()) {
             userEmail?.substringBefore('@')?.capitalize() ?: "Nuevo usuario"
         } else {

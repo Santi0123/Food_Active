@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.gymactive.databinding.ActivityLoginBinding
 import com.example.gymactive.domain.usuario.models.UsuarioModel
+import com.example.gymactive.ui.views.fragment.VistaGeneral.VistaGeneralFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -113,6 +114,12 @@ class Login : AppCompatActivity() {
         loginBinding.registrarse.setOnClickListener {
             cleanBox()
             startActivity(Intent(this, Registrarse::class.java))
+            finish()
+        }
+
+        loginBinding.invitado.setOnClickListener{
+            cleanBox()
+            startActivity(Intent(this, MainActivity::class.java))
             finish()
         }
     }
