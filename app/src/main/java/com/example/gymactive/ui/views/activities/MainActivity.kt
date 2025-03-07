@@ -85,10 +85,7 @@ class MainActivity : AppCompatActivity() {
 
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.settingMenu -> {
-                    navController.navigate(R.id.settingMenu)
-                    true
-                }
+
                 R.id.comidaMenu -> {
                     navController.navigate(R.id.comidaMenu)
                     true

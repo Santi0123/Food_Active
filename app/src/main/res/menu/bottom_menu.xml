@@ -1,17 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:id="@+id/settingMenu"
-        android:title="Setting"
-        android:enabled="true"
-
-        android:icon="@drawable/setting"/>
-
-    <item
-        android:id="@+id/home2"
-        android:title="Home"
-        android:enabled="true"
-        android:icon="@drawable/house"/>
 
     <item
         android:id="@+id/comidaMenu"
@@ -19,6 +7,12 @@
         android:enabled="true"
         android:icon="@drawable/comida"
         />
+
+    <item
+        android:id="@+id/home2"
+        android:title="Home"
+        android:enabled="true"
+        android:icon="@drawable/house"/>
     <item
         android:id="@+id/vistaGeneral"
         android:title="Lista general"
